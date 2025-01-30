@@ -110,18 +110,66 @@
         </div>
  
         <form id="add-form" class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-4">Neues Tool hinzufügen</h2>
-            <input id="name" type="text" placeholder="Name" class="p-2 border rounded w-full mb-2">
-            <input id="link" type="text" placeholder="Link" class="p-2 border rounded w-full mb-2">
-            <input id="description" type="text" placeholder="Beschreibung" class="p-2 border rounded w-full mb-2">
-            <input id="type" type="text" placeholder="Typ" class="p-2 border rounded w-full mb-2">
+            <h2 class="text-xl font-semibold mb-4">Neues Tool hinzuf&uuml;gen</h2>
+            
+            <h3 class="text-xl font-semibold mb-2">Name</h3>
+            <input id="name" type="text" placeholder="Name des KI-Modells" class="p-2 border rounded w-full mb-2">
+            
+            <h3 class="text-xl font-semibold mb-2">Link</h3>
+            <input id="link" type="text" placeholder="Link zur Anwendung" class="p-2 border rounded w-full mb-2">
+            
+            <h3 class="text-xl font-semibold mb-2">Beschreibung</h3>
+            <input id="description" type="text" placeholder="Funktionalitäten der KI" class="p-2 border rounded w-full mb-2">
+            
+            <h3 class="text-xl font-semibold mb-2">Typ</h3>
+            <select id="type" class="p-2 border rounded w-full mb-2">
+                <option value="Text-zu-Sprache">Text-zu-Sprache</option>
+                <option value="Text-zu-Bild">Text-zu-Bild</option>
+                <option value="Sprache-zu-Text">Sprache-zu-Text</option>
+                <option value="Text-zu-Pointcloud">Text-zu-Pointcloud</option>
+                <option value="Text-zu-Mesh">Text-zu-Mesh</option>
+                <option value="Sprachmodelle">Sprachmodelle</option>
+            </select>
+            
+            <h3 class="text-xl font-semibold mb-2">Preis</h3>
             <input id="price-add" type="text" placeholder="Preis" class="p-2 border rounded w-full mb-2">
-            <input id="ranking-add" type="number" min="1" max="5" placeholder="Ranking (1-5)" class="p-2 border rounded w-full mb-2">
-            <input id="targetGroup-add" type="text" placeholder="Zielgruppe" class="p-2 border rounded w-full mb-2">
+            
+            <h3 class="text-xl font-semibold mb-2">Rating</h3>
+            <div id="rating-add" class="flex space-x-1 mb-2">
+                <span class="star text-gray-400 cursor-pointer" data-value="1">&#9733;</span>
+                <span class="star text-gray-400 cursor-pointer" data-value="2">&#9733;</span>
+                <span class="star text-gray-400 cursor-pointer" data-value="3">&#9733;</span>
+                <span class="star text-gray-400 cursor-pointer" data-value="4">&#9733;</span>
+                <span class="star text-gray-400 cursor-pointer" data-value="5">&#9733;</span>
+                <input id="ranking-add" type="hidden" value="0">
+            </div>
+            
+            <h3 class="text-xl font-semibold mb-2">Zielgruppe</h3>
+            <select id="targetGroup-add" class="p-2 border rounded w-full mb-2">
+                <option value="Kreativ/Art">Kreativ/Art</option>
+                <option value="Wissenschaft & Forschung">Wissenschaft & Forschung</option>
+                <option value="Alltag">Alltag</option>
+            </select>
+            
             <button type="button" id="add-button" class="bg-blue-500 text-white p-2 rounded w-full">+</button>
         </form>
+        
+        <script>
+            document.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', function() {
+                    let value = this.getAttribute('data-value');
+                    document.getElementById('ranking-add').value = value;
+                    document.querySelectorAll('.star').forEach(s => s.classList.remove('text-yellow-500'));
+                    for (let i = 0; i < value; i++) {
+                        document.querySelectorAll('.star')[i].classList.add('text-yellow-500');
+                    }
+                });
+            });
+        </script>
+        
  
         <div id="card-container" class="grid gap-4"></div>
     </div>
 </body>
 </html>
+
