@@ -1,6 +1,5 @@
 # **English:**
 # SearchAI
-# KI News & Tools
 
 
 
@@ -8,7 +7,7 @@
 
 
 
-**KI News & Tools** is a platform that allows users to explore, filter, and add AI-related tools. Users can search for AI tools, view details about them, and contribute by adding new tools to the database.
+**SearchAI** is a platform that allows users to explore, filter, and add AI-related tools. Users can search for AI tools, view details about them, and contribute by adding new tools to the database.
 
 
 
@@ -89,11 +88,11 @@ If you have suggestions for improvements or new AI tools to add, feel free to co
 🛠 **Developed for AI enthusiasts and professionals!**
 
 # **Deutsch:**
-# KI News & Tools
+# SearchAI
 
 ## 📌 Übersicht
 
-**KI News & Tools** ist eine Plattform, die es Nutzern ermöglicht, KI-Tools zu entdecken, zu filtern und hinzuzufügen. Nutzer können nach KI-Tools suchen, Details dazu anzeigen und neue Tools zur Datenbank hinzufügen.
+**SearchAI** ist eine Plattform, die es Nutzern ermöglicht, KI-Tools zu entdecken, zu filtern und hinzuzufügen. Nutzer können nach KI-Tools suchen, Details dazu anzeigen und neue Tools zur Datenbank hinzufügen.
 
 ---
 
