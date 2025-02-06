@@ -1,6 +1,7 @@
 //the data we provided is contained in the xlsx data
 //there will be the name of the AI and the corrosponding description
 //**********************************************************************//
+
 let data = [];
 
 function read_and_save_xlsx_file(){ //there is the corrosponding description/name
@@ -12,7 +13,6 @@ function read_and_save_xlsx_file(){ //there is the corrosponding description/nam
     
     //reading our exel file 
     const file = file_type.readFile("./KI-Liste.xlsx"); // "./" the path is dynamic and we only need to type the name of the file
-
 
     const sheets = file.SheetNames; //we have sheets for the exel file, cause else, it would to annoying to read the data in a elegant way
 
@@ -35,5 +35,14 @@ function searching(){ //when user tries to search, here we will give him tips
     const searchbar = document.getElementById("search");
 
     //now we will compare the written thing with our data we have and give the user a valued answer
-    
+    if(searchbar.innerText != ""){
+        compare(text);
+    }
+    else{
+
+    }
+}
+
+function compare(text){ //here we will be, comparing the data with our searched-text
+
 }
