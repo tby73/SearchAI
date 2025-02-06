@@ -1,179 +1,203 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SearchAI</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchInput = document.getElementById("search");
-            const priceFilter = document.getElementById("price");
-            const rankingFilter = document.getElementById("ranking");
-            const targetGroupFilter = document.getElementById("targetGroup");
-            const cardContainer = document.getElementById("card-container");
-            const addForm = document.getElementById("add-form");
-            const addButton = document.getElementById("add-button");
-           
-            let data = [
-                {
-                    name: "ChatGPT",
-                    link: "https://openai.com/chatgpt",
-                    description: "Ein KI-gestützter Chatbot von OpenAI.",
-                    type: "Software",
-                    price: "Kostenlos / Abo",
-                    ranking: 5,
-                    targetGroup: "Entwickler & Forscher"
-                },
-                {
-                    name: "Midjourney",
-                    link: "https://www.midjourney.com",
-                    description: "Ein KI-Bildgenerator für Kreative.",
-                    type: "Kreative KI",
-                    price: "Abo",
-                    ranking: 4,
-                    targetGroup: "Kreative & Künstler"
-                }
-            ];
- 
-            function renderData() {
-                const searchValue = searchInput.value.toLowerCase();
-                const priceValue = priceFilter.value;
-                const rankingValue = rankingFilter.value;
-                const targetGroupValue = targetGroupFilter.value;
-               
-                const filteredData = data.filter(item =>
-                    (item.name.toLowerCase().includes(searchValue) || item.description.toLowerCase().includes(searchValue)) &&
-                    (priceValue ? item.price === priceValue : true) &&
-                    (rankingValue ? item.ranking.toString() === rankingValue : true) &&
-                    (targetGroupValue ? item.targetGroup === targetGroupValue : true)
-                );
- 
-                cardContainer.innerHTML = filteredData.map(item => `
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h2 class="text-xl font-semibold">${item.name}</h2>
-                        <p class="text-gray-600">${item.description}</p>
-                        <a href="${item.link}" target="_blank" class="text-blue-500 underline">Mehr erfahren</a>
-                        <p class="mt-2"><strong>Typ:</strong> ${item.type}</p>
-                        <p><strong>Preis:</strong> ${item.price}</p>
-                        <p><strong>Ranking:</strong> ${'⭐'.repeat(item.ranking)}</p>
-                        <p><strong>Zielgruppe:</strong> ${item.targetGroup}</p>
-                    </div>
-                `).join("");
-            }
- 
-            addButton.addEventListener("click", function () {
-                const name = document.getElementById("name").value;
-                const link = "https://" + document.getElementById("link").value;
-                const description = document.getElementById("description").value;
-                const type = document.getElementById("type").value;
-                const price = document.getElementById("price-add").value;
-                const ranking = parseInt(document.getElementById("ranking-add").value);
-                const targetGroup = document.getElementById("targetGroup-add").value;
- 
-                if (name && link && description && type && price && ranking && targetGroup) {
-                    data.push({ name, link, description, type, price, ranking, targetGroup });
-                    renderData();
-                    addForm.reset();
-                }
-            });
- 
-            searchInput.addEventListener("input", renderData);
-            priceFilter.addEventListener("change", renderData);
-            rankingFilter.addEventListener("change", renderData);
-            targetGroupFilter.addEventListener("change", renderData);
- 
-            renderData();
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SearchAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.getElementById("search");
+      const priceFilter = document.getElementById("price");
+      const rankingFilter = document.getElementById("ranking");
+      const targetGroupFilter = document.getElementById("targetGroup");
+      const cardContainer = document.getElementById("card-container");
+      const addForm = document.getElementById("add-form");
+      const addButton = document.getElementById("add-button");
+      const priceAddSelect = document.getElementById("price-add");
+      const priceDescContainer = document.getElementById("price-description-container");
+
+      let data = [
+        {
+          name: "ChatGPT",
+          link: "https://openai.com/chatgpt",
+          description: "Ein KI-gestützter Chatbot von OpenAI.",
+          type: "Software",
+          price: "Kostenlos / Abo",
+          // Optional: priceDescription can be left empty if not provided.
+          priceDescription: "",
+          ranking: 5,
+          targetGroup: "Entwickler & Forscher"
+        },
+        {
+          name: "Midjourney",
+          link: "https://www.midjourney.com",
+          description: "Ein KI-Bildgenerator für Kreative.",
+          type: "Kreative KI",
+          price: "Abo",
+          priceDescription: "",
+          ranking: 4,
+          targetGroup: "Kreative & Künstler"
+        }
+      ];
+
+      // Show or hide the price description input based on the selected price option.
+      priceAddSelect.addEventListener("change", function () {
+        const selectedPrice = this.value;
+        if (selectedPrice === "Abo" || selectedPrice === "Kostenlos / Abo") {
+          priceDescContainer.classList.remove("hidden");
+        } else {
+          priceDescContainer.classList.add("hidden");
+          // Clear the input when hidden
+          document.getElementById("price-description").value = "";
+        }
+      });
+
+      function renderData() {
+        const searchValue = searchInput.value.toLowerCase();
+        const priceValue = priceFilter.value;
+        const rankingValue = rankingFilter.value;
+        const targetGroupValue = targetGroupFilter.value;
+
+        const filteredData = data.filter(item =>
+          (item.name.toLowerCase().includes(searchValue) || item.description.toLowerCase().includes(searchValue)) &&
+          (priceValue ? item.price === priceValue : true) &&
+          (rankingValue ? item.ranking.toString() === rankingValue : true) &&
+          (targetGroupValue ? item.targetGroup === targetGroupValue : true)
+        );
+
+        cardContainer.innerHTML = filteredData.map(item => `
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">${item.name}</h2>
+            <p class="text-gray-600">${item.description}</p>
+            <a href="${item.link}" target="_blank" class="text-blue-500 underline">Mehr erfahren</a>
+            <p class="mt-2"><strong>Typ:</strong> ${item.type}</p>
+            <p><strong>Preis:</strong> ${item.price}</p>
+            ${item.priceDescription ? `<p><strong>Preis Beschreibung:</strong> ${item.priceDescription}</p>` : ""}
+            <p><strong>Ranking:</strong> ${'⭐'.repeat(item.ranking)}</p>
+            <p><strong>Zielgruppe:</strong> ${item.targetGroup}</p>
+          </div>
+        `).join("");
+      }
+
+      addButton.addEventListener("click", function () {
+        const name = document.getElementById("name").value;
+        const link = "https://" + document.getElementById("link").value;
+        const description = document.getElementById("description").value;
+        const type = document.getElementById("type").value;
+        const price = priceAddSelect.value;
+        const priceDescription = document.getElementById("price-description").value;
+        const ranking = parseInt(document.getElementById("ranking-add").value);
+        const targetGroup = document.getElementById("targetGroup-add").value;
+
+        if (name && link && description && type && price && ranking && targetGroup) {
+          data.push({ name, link, description, type, price, priceDescription, ranking, targetGroup });
+          renderData();
+          addForm.reset();
+          // Hide the price description field again after reset.
+          priceDescContainer.classList.add("hidden");
+        }
+      });
+
+      searchInput.addEventListener("input", renderData);
+      priceFilter.addEventListener("change", renderData);
+      rankingFilter.addEventListener("change", renderData);
+      targetGroupFilter.addEventListener("change", renderData);
+
+      renderData();
+
+      // Star rating functionality remains the same.
+      document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+          let value = this.getAttribute('data-value');
+          document.getElementById('ranking-add').value = value;
+          document.querySelectorAll('.star').forEach(s => s.classList.remove('text-yellow-500'));
+          for (let i = 0; i < value; i++) {
+            document.querySelectorAll('.star')[i].classList.add('text-yellow-500');
+          }
         });
-    </script>
+      });
+    });
+  </script>
 </head>
 <body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6 text-center">SearchAI</h1>
-        <div class="flex flex-wrap gap-4 mb-6">
-            <input id="search" type="text" placeholder="🔍 Name oder Beschreibung suchen..." class="p-2 border rounded w-full md:w-1/3">
-            <select id="price" class="p-2 border rounded w-full md:w-1/6">
-                <option value="Kostenlos">Kostenlos</option>
-                <option value="Kostenlos / Abo">Kostenlos / Abo</option>
-                <option value="Abo">Abo</option>
-            </select>
-            <select id="ranking" class="p-2 border rounded w-full md:w-1/6">
-                <option value="">Ranking</option>
-                <option value="5">5 Sterne</option>
-                <option value="4">4 Sterne</option>
-            </select>
-            <select id="targetGroup" class="p-2 border rounded w-full md:w-1/4">
-                <option value="">Zielgruppe</option>
-                <option value="Entwickler & Forscher">Entwickler & Forscher</option>
-                <option value="Kreative & Künstler">Kreative & Künstler</option>
-            </select>
-        </div>
- 
-        <form id="add-form" class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-4">Neues Tool hinzuf&uuml;gen</h2>
-            
-            <h3 class="text-xl font-semibold mb-2">Name</h3>
-            <input id="name" type="text" placeholder="Name des KI-Modells" class="p-2 border rounded w-full mb-2">
-            
-            <h3 class="text-xl font-semibold mb-2">Link</h3>
-            <input id="link" type="text" placeholder="Link zur Anwendung" class="p-2 border rounded w-full mb-2">
-            
-            <h3 class="text-xl font-semibold mb-2">Beschreibung</h3>
-            <input id="description" type="text" placeholder="Funktionalitäten der KI" class="p-2 border rounded w-full mb-2">
-            
-            <h3 class="text-xl font-semibold mb-2">Typ</h3>
-            <select id="type" class="p-2 border rounded w-full mb-2">
-                <option value="Text-zu-Sprache">Text-zu-Sprache</option>
-                <option value="Text-zu-Bild">Text-zu-Bild</option>
-                <option value="Sprache-zu-Text">Sprache-zu-Text</option>
-                <option value="Text-zu-Pointcloud">Text-zu-Pointcloud</option>
-                <option value="Text-zu-Mesh">Text-zu-Mesh</option>
-                <option value="Sprachmodelle">Sprachmodelle</option>
-            </select>
-            
-            <h3 class="text-xl font-semibold mb-2">Preis</h3>
-            <select id="price-add" class="p-2 border rounded w-full mb-2">
-                <option value="Kostenlos">Kostenlos</option>
-                <option value="Abo">Abo</option>
-                <option value="Kostenlos / Abo">Kostenlos / Abo</option>
-            </select>
-            
-            <h3 class="text-xl font-semibold mb-2">Rating</h3>
-            <div id="rating-add" class="flex space-x-1 mb-2">
-                <span class="star text-gray-400 cursor-pointer" data-value="1">&#9733;</span>
-                <span class="star text-gray-400 cursor-pointer" data-value="2">&#9733;</span>
-                <span class="star text-gray-400 cursor-pointer" data-value="3">&#9733;</span>
-                <span class="star text-gray-400 cursor-pointer" data-value="4">&#9733;</span>
-                <span class="star text-gray-400 cursor-pointer" data-value="5">&#9733;</span>
-                <input id="ranking-add" type="hidden" value="0">
-            </div>
-            
-            <h3 class="text-xl font-semibold mb-2">Zielgruppe</h3>
-            <select id="targetGroup-add" class="p-2 border rounded w-full mb-2">
-                <option value="Kreativ/Art">Kreativ/Art</option>
-                <option value="Wissenschaft & Forschung">Wissenschaft & Forschung</option>
-                <option value="Alltag">Alltag</option>
-            </select>
-            
-            <button type="button" id="add-button" class="bg-blue-500 text-white p-2 rounded w-full">+</button>
-        </form>
-        
-        <script>
-            document.querySelectorAll('.star').forEach(star => {
-                star.addEventListener('click', function() {
-                    let value = this.getAttribute('data-value');
-                    document.getElementById('ranking-add').value = value;
-                    document.querySelectorAll('.star').forEach(s => s.classList.remove('text-yellow-500'));
-                    for (let i = 0; i < value; i++) {
-                        document.querySelectorAll('.star')[i].classList.add('text-yellow-500');
-                    }
-                });
-            });
-        </script>
-        
- 
-        <div id="card-container" class="grid gap-4"></div>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">SearchAI</h1>
+    <div class="flex flex-wrap gap-4 mb-6">
+      <input id="search" type="text" placeholder="🔍 Name oder Beschreibung suchen..." class="p-2 border rounded w-full md:w-1/3" />
+      <select id="price" class="p-2 border rounded w-full md:w-1/6">
+        <option value="Kostenlos">Kostenlos</option>
+        <option value="Kostenlos / Abo">Kostenlos / Abo</option>
+        <option value="Abo">Abo</option>
+      </select>
+      <select id="ranking" class="p-2 border rounded w-full md:w-1/6">
+        <option value="">Ranking</option>
+        <option value="5">5 Sterne</option>
+        <option value="4">4 Sterne</option>
+      </select>
+      <select id="targetGroup" class="p-2 border rounded w-full md:w-1/4">
+        <option value="">Zielgruppe</option>
+        <option value="Entwickler & Forscher">Entwickler & Forscher</option>
+        <option value="Kreative & Künstler">Kreative & Künstler</option>
+      </select>
     </div>
+
+    <form id="add-form" class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4">Neues Tool hinzufügen</h2>
+
+      <h3 class="text-xl font-semibold mb-2">Name</h3>
+      <input id="name" type="text" placeholder="Name des KI-Modells" class="p-2 border rounded w-full mb-2" />
+
+      <h3 class="text-xl font-semibold mb-2">Link</h3>
+      <input id="link" type="text" placeholder="Link zur Anwendung (ohne https://)" class="p-2 border rounded w-full mb-2" />
+
+      <h3 class="text-xl font-semibold mb-2">Beschreibung</h3>
+      <input id="description" type="text" placeholder="Funktionalitäten der KI" class="p-2 border rounded w-full mb-2" />
+
+      <h3 class="text-xl font-semibold mb-2">Typ</h3>
+      <select id="type" class="p-2 border rounded w-full mb-2">
+        <option value="Text-zu-Sprache">Text-zu-Sprache</option>
+        <option value="Text-zu-Bild">Text-zu-Bild</option>
+        <option value="Sprache-zu-Text">Sprache-zu-Text</option>
+        <option value="Text-zu-Pointcloud">Text-zu-Pointcloud</option>
+        <option value="Text-zu-Mesh">Text-zu-Mesh</option>
+        <option value="Sprachmodelle">Sprachmodelle</option>
+      </select>
+
+      <h3 class="text-xl font-semibold mb-2">Preis</h3>
+      <select id="price-add" class="p-2 border rounded w-full mb-2">
+        <option value="Kostenlos">Kostenlos</option>
+        <option value="Abo">Abo</option>
+        <option value="Kostenlos / Abo">Kostenlos / Abo</option>
+      </select>
+
+      <!-- Price description input, hidden by default -->
+      <div id="price-description-container" class="mb-2 hidden">
+        <h3 class="text-xl font-semibold mb-2">Preis Beschreibung</h3>
+        <input id="price-description" type="text" placeholder="Geben Sie die Preisbeschreibung ein" class="p-2 border rounded w-full mb-2" />
+      </div>
+
+      <h3 class="text-xl font-semibold mb-2">Rating</h3>
+      <div id="rating-add" class="flex space-x-1 mb-2">
+        <span class="star text-gray-400 cursor-pointer" data-value="1">&#9733;</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="2">&#9733;</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="3">&#9733;</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="4">&#9733;</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="5">&#9733;</span>
+        <input id="ranking-add" type="hidden" value="0" />
+      </div>
+
+      <h3 class="text-xl font-semibold mb-2">Zielgruppe</h3>
+      <select id="targetGroup-add" class="p-2 border rounded w-full mb-2">
+        <option value="Kreativ/Art">Kreativ/Art</option>
+        <option value="Wissenschaft & Forschung">Wissenschaft & Forschung</option>
+        <option value="Alltag">Alltag</option>
+      </select>
+
+      <button type="button" id="add-button" class="bg-blue-500 text-white p-2 rounded w-full">+</button>
+    </form>
+
+    <div id="card-container" class="grid gap-4"></div>
+  </div>
 </body>
 </html>
-
