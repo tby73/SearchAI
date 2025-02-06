@@ -17,9 +17,14 @@ function read_and_save_xlsx_file(){ //there is the corrosponding description/nam
     const sheets = file.SheetNames; //we have sheets for the exel file, cause else, it would to annoying to read the data in a elegant way
 
     for(let i = 0; i < sheets.length; i++){
-
+        const temp = file_type.utils.sheet_to_json(file.Sheets[file.SheetNames[i]]);
+        temp.forEach((res) => {
+            data.push(res);
+        });
     }
 
+    //printing our data 
+    console.log(data);
 }
 
 function reset(){ //when were reseting the data currently used to compare.
@@ -27,5 +32,8 @@ function reset(){ //when were reseting the data currently used to compare.
 }
 
 function searching(){ //when user tries to search, here we will give him tips
+    const searchbar = document.getElementById("search");
 
+    //now we will compare the written thing with our data we have and give the user a valued answer
+    
 }
