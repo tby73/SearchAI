@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anmelden/Registrieren</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #009B48;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #007A3D;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .switch-form a {
+            color: #009B48;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Anmeldeformular -->
+    <div class="container" id="loginForm">
+        <h2 class="form-title">Anmelden</h2>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="loginEmail">E-Mail-Adresse</label>
+                <input type="email" id="loginEmail" required>
+                <div class="error-message" id="loginEmailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Passwort</label>
+                <input type="password" id="loginPassword" required>
+                <div class="error-message" id="loginPasswordError"></div>
+            </div>
+            <button type="submit" class="btn">Anmelden</button>
+        </form>
+        <div class="switch-form">
+            <p>Noch kein Konto? <a onclick="toggleForms()">Jetzt registrieren</a></p>
+        </div>
+    </div>
+
+    <!-- Registrierungsformular -->
+    <div class="container hidden" id="registerForm">
+        <h2 class="form-title">Registrieren</h2>
+        <form onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <label for="registerUsername">Benutzername</label>
+                <input type="text" id="registerUsername" required>
+                <div class="error-message" id="registerUsernameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">E-Mail-Adresse</label>
+                <input type="email" id="registerEmail" required>
+                <div class="error-message" id="registerEmailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Passwort</label>
+                <input type="password" id="registerPassword" required>
+                <div class="error-message" id="registerPasswordError"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Passwort bestätigen</label>
+                <input type="password" id="confirmPassword" required>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            <button type="submit" class="btn">Registrieren</button>
+        </form>
+        <div class="switch-form">
+            <p>Bereits registriert? <a onclick="toggleForms()">Jetzt anmelden</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Formular-Wechsel-Funktion
+        function toggleForms() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('registerForm').classList.toggle('hidden');
+            clearErrors();
+            clearInputs();
+        }
+
+        // Fehler löschen
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+                error.textContent = '';
+            });
+        }
+
+        // Eingabefelder zurücksetzen
+        function clearInputs() {
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
+        }
+
+        // Neue Login-Funktion
+        async function handleLogin(event) {
+            event.preventDefault();
+            clearErrors();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store user data in localStorage
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('username', data.username);
+                    // Set a flag to load news on main page load
+                    localStorage.setItem('shouldLoadNews', 'true');
+                    // Erfolgreicher Login
+                    window.location.href = '/main';
+                } else {
+                    // Fehlermeldung anzeigen
+                    document.getElementById('loginEmailError').textContent = data.message;
+                    document.getElementById('loginEmailError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('loginEmailError').textContent = 'Ein Fehler ist aufgetreten';
+                document.getElementById('loginEmailError').style.display = 'block';
+            }
+
+            return false;
+        }
+
+        // Neue Register-Funktion
+        async function handleRegister(event) {
+            event.preventDefault();
+            clearErrors();
+
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validierung
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Die Passwörter stimmen nicht überein';
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                return false;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Set a flag to load news after login
+                    localStorage.setItem('shouldLoadNews', 'true');
+                    // Erfolgreiche Registrierung
+                    alert('Registrierung erfolgreich! Bitte melden Sie sich an.');
+                    toggleForms(); // Zurück zum Login-Formular
+                } else {
+                    // Fehlermeldung anzeigen
+                    document.getElementById('registerEmailError').textContent = data.message;
+                    document.getElementById('registerEmailError').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                document.getElementById('registerEmailError').textContent = 'Ein Fehler ist aufgetreten';
+                document.getElementById('registerEmailError').style.display = 'block';
+            }
+
+            return false;
+        }
+
+        // Partikel-Animation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+
+        class Particle {
+            constructor(x, y, size, color) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.color = color;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) {
+                    this.speedX *= -1;
+                }
+                if (this.y < 0 || this.y > canvas.height) {
+                    this.speedY *= -1;
+                }
+
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) {
+                const size = Math.random() * 5 + 1;
+                const x = Math.random() * (canvas.width - size * 2) + size;
+                const y = Math.random() * (canvas.height - size * 2) + size;
+                const color = 'rgba(0, 255, 0, 0.8)';
+                particlesArray.push(new Particle(x, y, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => particle.update());
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+    </script>
+</body>
+</html>

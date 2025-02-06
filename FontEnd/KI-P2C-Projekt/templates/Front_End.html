@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2C - Build your perfect PC</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style> 
+    body {
+      font-family: 'Arial', sans-serif; 
+      margin: 0; /* Entfernt Standardabstände der Browser um den Body */
+      padding: 0; /* Entfernt Standardinnenabstand des Bodys */
+      background-color: #f5f5f5;
+      color: #333333;
+      overflow-x: hidden; /* Verhindert horizontales Scrollen */
+    }
+    
+    .taskbar {
+      position: fixed; 
+      top: 0; 
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1200px; /* Match the hero max-width */
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 0 0 10px 10px;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Styling für Links in der Navigationsleiste */
+    .taskbar a {
+      padding: 10px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      color: #333; /* Added for better visibility */
+    }
+
+    /* Hover-Effekt für Navigationslinks */
+    .taskbar a:hover {
+      background-color: #e0e0e0; /* Hintergrundfarbe beim Hover */
+      border-radius: 5px; /* Abgerundete Ecken beim Hover */
+    }
+
+    /* Styling für den Hauptinhalt */
+    .main-content {
+      text-align: center; /* Zentriert den Text */
+      padding: 100px 20px; /* Innenabstand für den Inhalt */
+      margin-top: 60px; /* Platz für die Taskbar */
+    }
+
+    /* Styling für Hero-Abschnitte */
+    .hero {
+      max-width: 1200px; /* Begrenzt die maximale Breite */
+      margin: 0 auto; /* Oberer & unterer Abstand => 0 | Linker & Rechter Abstand => auto */
+      padding-top: 20px; /* Reduzierter oberer Abstand */
+      display: flex;
+      flex-direction: column; /* Spaltenweise Anordnung der Elemente */
+      align-items: center; /* Vertikale Zentrierung der Elemente */
+    }
+
+    /* Styling für Hauptüberschriften */
+    .hero h1 {
+      font-size: 48px; /* Schriftgröße */
+      font-weight: 600; /* Schriftstärke */
+      margin-bottom: 10px; /* Reduzierter unterer Abstand */
+      width: 100%; /* Breite auf 100% des Elternelements */
+      text-align: center; /* Zentriert den Text horizontal */
+    }
+
+    /* Styling für Textcontainer */
+    .hero .text-container {
+      width: 100%; /* Changed from 80% to use full width */
+      max-width: 1200px; /* Increased from 800px */
+      margin: 10px auto;
+      padding: 20px 40px; /* Added horizontal padding */
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* News content specific styling */
+    .hero .text-container h2 {
+      font-size: 28px;
+      color: #333;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #009B48;
+      padding-bottom: 10px;
+    }
+
+    .hero .text-container h3 {
+      font-size: 22px;
+      color: #444;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    .hero .text-container ul {
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+
+    .hero .text-container ul li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .hero .text-container ul ul {
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    .hero .text-container p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .hero .text-container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .hero .text-container table th,
+    .hero .text-container table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .hero .text-container table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    .hero .text-container table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .hero .text-container strong {
+      color: #009B48;
+      font-weight: 600;
+    }
+
+    /* Styling für Paragraphen in Hero-Abschnitten */
+    .hero p {
+      font-size: 18px;
+      color: #666666;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    /* Styling für Call-to-Action Buttons */
+    .cta-btn {
+      background-color: #009B48;
+      padding: 15px 40px;
+      color: #ffffff;
+      border: none; /* Kein Rahmen */
+      border-radius: 5px;
+      font-size: 18px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      display: block; /* Block-Element, um zentrieren zu ermöglichen */
+      margin: 0 auto; /* Zentriert den Button horizontal */
+      text-align: center; /* Zentriert den Text im Button */
+    }
+
+    .cta-btn:hover {
+      background-color: #007A3D; /* Dunkleres Grün beim Hover */
+    }
+
+    /* Styling für den Hintergrund-Canvas */
+    canvas {
+      position: fixed; /* Fixiert den Canvas im Viewport */
+      top: 0; /* Positioniert den Canvas am oberen Rand */
+      left: 0; /* Positioniert den Canvas am linken Rand */
+      width: 100vw; /* Setzt die Breite auf 100% der Viewport-Breite */
+      height: 100vh; /* Setzt die Höhe auf 100% der Viewport-Höhe */
+      z-index: -1; /* Platziert den Canvas hinter anderen Elementen */
+    }
+
+    /* Klasse zum Verstecken von Elementen */
+    .hidden {
+      display: none; /* Versteckt das Element vollständig */
+    }
+
+    /* Spezifisches Styling für den News-Abschnitt */
+    #title .text-container {
+      width: 80%; /* Setzt die Breite auf 80% des Elternelements */
+      max-width: 800px; /* Begrenzt die maximale Breite */
+      margin: 20px auto; /* Zentriert den Container horizontal mit 20px Abstand oben/unten */
+      padding: 20px; /* Fügt inneren Abstand hinzu */
+      background-color: rgba(255, 255, 255, 0.9); /* Setzt einen halbtransparenten weien Hintergrund */
+      border-radius: 10px; /* Rundet die Ecken */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 10px; /* Reduzierter oberer Abstand */
+    }
+
+    #title .text-container p {
+      text-align: left;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    #title .text-container ul {
+      text-align: left;
+      padding-left: 20px;
+      margin-bottom: 0; /* Entfernt den unteren Abstand der Liste */
+    }
+
+    #title .text-container li {
+      text-align: left;
+    }
+
+    /* Spezielle Formatierung für aufeinanderfolgende Paragraphen und Listen */
+    #title .text-container p:has(ul) {
+      margin-bottom: 0;
+      border-bottom: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    #title .text-container p:has(ul) + p {
+      margin-top: 0;
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    /* Zentrierte Textausrichtung für bestimmte Abschnitte */
+    #home .text-container p,
+    #create-pc .text-container p,
+    #my-pcs .text-container p {
+      text-align: center;
+    }
+
+    /* Styling für Filteroptionen */
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Zentriert die Boxen horizontal */
+      gap: 20px;
+      margin-top: 20px;
+      width: 100%;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-option {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px; /* Abgerundete Ecken */
+      transition: background-color 0.3s ease; /* Übergangseffekt für Hintergrundfarbe */
+      background-color: #fff; /* Standard Hintergrundfarbe */
+    }
+
+    .filter-option.error {
+      background-color: rgba(255, 0, 0, 0.2); /* Rote Hintergrundfarbe für Fehler, um visuell anzuzeigen, dass etwas fehlt */
+    }
+
+    .filter-option label {
+      margin-bottom: 5px; /* Fügt einen Abstand unter dem Label hinzu */
+      font-weight: bold; /* Setzt die Schriftstärke auf fett für bessere Sichtbarkeit */
+    }
+
+    .filter-option input[type="range"] {
+      width: 100%; /* Setzt die Breite des Schiebereglers auf 100% des Elternelements */
+    }
+
+    .radio-group {
+      display: flex; /* Setzt die Anzeige auf Flexbox, um die Radio-Buttons horizontal anzuordnen */
+      gap: 20px; /* Fügt einen Abstand von 20px zwischen den Radio-Buttons hinzu */
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 5px; /* Fügt einen Abstand rechts vom Radio-Button hinzu */
+    }
+
+    select {
+      padding: 5px; /* Fügt einen Innenabstand von 5px hinzu */
+      font-size: 16px; /* Setzt die Schriftgröße auf 16px für bessere Lesbarkeit */
+    }
+
+    /* Add these new styles */
+    .card {
+        margin-bottom: 20px;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .card-subtitle {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .card-footer {
+        background-color: transparent;
+        border-top: none;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    /* Styling for range inputs (sliders) */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e0e0e0;
+      outline: none;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    /* Slider thumb (the draggable part) */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #009B48;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+      margin-top: -6px; /* This centers the thumb vertically in Chrome */
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #009B48;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+    }
+
+    /* Slider track */
+    input[type="range"]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: linear-gradient(to right, #009B48 var(--value, 50%), #e0e0e0 var(--value, 50%));
+      border-radius: 4px;
+    }
+
+    input[type="range"]::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: linear-gradient(to right, #009B48 var(--value, 50%), #e0e0e0 var(--value, 50%));
+      border-radius: 4px;
+    }
+
+    /* Active state */
+    input[type="range"]:active::-webkit-slider-thumb {
+      transform: scale(1.1);
+    }
+
+    input[type="range"]:active::-moz-range-thumb {
+      transform: scale(1.1);
+    }
+
+    /* Focus state */
+    input[type="range"]:focus {
+      outline: none;
+    }
+
+    /* Loading screen styles */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loading-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #009B48;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-content h2 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .loading-content p {
+      color: #666;
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    /* Add this to your CSS section */
+    .loading-container.hidden {
+      display: none !important;
+    }
+
+    /* User profile styles */
+    .user-profile {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      z-index: 1002;
+    }
+
+    .user-icon {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      width: 45px;
+      height: 45px;
+      justify-content: center;
+    }
+
+    .user-icon:hover {
+      background-color: #fff;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+
+    .user-icon i {
+      font-size: 24px;
+      color: #009B48;
+    }
+
+    .user-icon span {
+      display: none;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: calc(100% + 5px);
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      min-width: 200px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .user-dropdown.show {
+      display: block;
+    }
+
+    .user-dropdown .user-info {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .user-dropdown .user-info p {
+      margin: 5px 0;
+      color: #666;
+    }
+
+    .user-dropdown .user-actions {
+      padding: 10px;
+    }
+
+    .user-dropdown button {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 4px;
+      background: #009B48;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .user-dropdown button:hover {
+      background: #007A3D;
+    }
+
+    .user-dropdown button.logout {
+      background: #ff4444;
+    }
+
+    .user-dropdown button.logout:hover {
+      background: #cc0000;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      margin: 15% auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+
+    .close-modal {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    /* Configuration details styles */
+    .config-details {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .config-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .config-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .config-item h3 {
+      color: #333;
+      margin: 0 0 15px 0;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .config-item h3 i {
+      color: #009B48;
+    }
+
+    .config-item p {
+      margin: 10px 0;
+      color: #666;
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    .config-item .price {
+      font-weight: bold;
+      color: #009B48;
+      margin: 15px 0;
+      font-size: 1.2em;
+    }
+
+    .config-item a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 20px;
+      background: #009B48;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+      width: auto;
+      min-width: 120px;
+    }
+
+    .config-item a:hover {
+      background: #007A3D;
+    }
+
+    /* Update card styles for the configurations list */
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .card .btn {
+      display: inline-block;
+      padding: 8px 20px;
+      background: #009B48;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 15px;
+    }
+
+    .card .btn:hover {
+      background: #007A3D;
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 8px 20px;
+      background: #009B48;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .btn-secondary:hover {
+      background: #007A3D;
+    }
+
+    @media (max-width: 1200px) {
+      .config-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .config-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Logo styles */
+    .site-logo {
+      position: fixed;
+      top: 15px;
+      left: 20px;
+      z-index: 1002;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .site-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas für Hintergrundanimation -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Site Logo -->
+  <div class="site-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="P2C Logo">
+  </div>
+
+  <!-- User Profile (outside taskbar) -->
+  <div class="user-profile">
+    <div class="user-icon" onclick="toggleUserDropdown()">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-info">
+        <p>Username: <span id="dropdown-username"></span></p>
+        <p>Email: <span id="dropdown-email"></span></p>
+      </div>
+      <div class="user-actions">
+        <button onclick="showChangePasswordModal()">Change Password</button>
+        <button onclick="logout()" class="logout">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigationsleiste -->
+  <div class="taskbar">
+    <a onclick="showSection('title')">News</a>
+    <a onclick="showSection('home')">Home</a>
+    <a onclick="showSection('create-pc')">Create my PC</a>
+    <a onclick="showSection('my-pcs')">My PCs</a>
+  </div>
+
+  <!-- Password Change Modal -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closePasswordModal()">&times;</span>
+      <h2>Change Password</h2>
+      <form id="changePasswordForm" onsubmit="return handlePasswordChange(event)">
+        <input type="password" id="currentPassword" placeholder="Current Password" required>
+        <input type="password" id="newPassword" placeholder="New Password" required>
+        <input type="password" id="confirmNewPassword" placeholder="Confirm New Password" required>
+        <button type="submit" class="btn">Change Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hauptinhalt -->
+  <div class="main-content">
+    <!-- News-Abschnitt -->
+    <section id="title" class="section hero hidden">
+      <h1>Neues zu Computern</h1>
+      <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+        <input type="text" id="newsTopicInput" placeholder="Enter topic (optional)" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 250px;">
+        <button onclick="loadAIGeneratedNews()" class="cta-btn" style="margin: 0;">Generate New Article</button>
+      </div>
+      <div class="text-container">
+        <p><strong>Intel Core i9-14900K schlechter als AMD Ryzen 9 7950X3D?</strong></p>
+        <p>
+          Am 10.10.2024 wurden die neuen Prozessoren von Intel und AMD auf den Markt gebracht. 
+          Nun stellt sich die Frage, ob der neue Intel Core i9-14900K besser ist als der AMD Ryzen 9 7950X3D.
+          Wir haben einige Tests durchgeführt und wir haben einige Erkenntnisse.
+        </p>
+        <p><strong>Allgemeine Daten zum Intel Core i9-14900K:</strong></p>
+        <ul>
+          <li>Prozessor: Intel Core i9-14900K</li>
+          <li>Kerne: 16 Kerne</li>
+          <li>Threads: 24 Threads</li>
+          <li>Taktfrequenz: 3,8 GHz</li>
+          <li>Maximale Taktfrequenz: 5,8 GHz</li>
+          <li>Cache: 32 MB</li>
+        </ul>
+        <p><strong>Allgemeine Daten zum AMD Ryzen 9 7950X3D:</strong></p>
+        <ul>
+          <li>Prozessor: AMD Ryzen 9 7950X3D</li>
+          <li>Kerne: 16 Kerne</li>
+          <li>Threads: 24 Threads</li>
+          <li>Taktfrequenz: 3,8 GHz</li>
+          <li>Maximale Taktfrequenz: 5,8 GHz</li>
+          <li>Cache: 32 MB</li>
+        </ul>
+        <p><strong>Testvorgang:</strong></p>
+        <p>
+          Um herauszufinden, welcher Prozessor besser ist, haben wir einige Tests durchgeführt.
+          Wir haben beide Prozessoren mit verschiedenen Benchmarks getestet.
+          Dabei haben wir die Leistung, die Fähigkeit, mehrere Anwendungen gleichzeitig zu öffnen und zu schließen und die Geschwindigkeit beim Laden von Websites getestet.
+          Wir haben auch die Preise der Prozessoren miteinander verglichen.
+          Wir haben die Erkenntnisse in einer Tabelle dargestellt.
+        </p>
+        <p><strong>Erkenntnisse:</strong></p>
+        <ul>
+          <li><strong>Benchmark:</strong> AMD Ryzen 9 7950X3D ist besser als der Intel Core i9-14900K aufgrund der höheren Taktfrequenz und der größeren Cachegröße.</li>
+          <li><strong>Preise:</strong> Intel Core i9-14900K kostet 1100€ und ist somit um 80€ teurer als der AMD Ryzen 9 7950X3D.</li>
+        </ul>
+        <p>
+          <strong>Fazit:</strong>
+          Der AMD Ryzen 9 7950X3D ist besser als der Intel Core i9-14900K.
+        </p>
+        <p><strong>Quellen:</strong> </p>
+          <ul>
+            <li>https://www.intel.com/content/www/us/en/products/details/processors/core/i9-14900k.html</li>
+            <li>https://www.amd.com/en/products/cpu/amd-ryzen-9-7950x3d</li>
+          </ul> 
+      </div>
+    </section>
+
+    <!-- Home-Abschnitt -->
+    <section id="home" class="section hero">
+      <h1>Welcome to My PC Creator</h1>
+      <p>Create and manage your own custom PCs with ease.</p>
+      <a onclick="showSection('create-pc')" class="cta-btn">Get Started</a>
+    </section>
+
+    <!-- Create-PC-Abschnitt -->
+    <div id="create-pc" class="section hero hidden">
+      <h1>Create My PC</h1>
+      <div class="text-container">
+        <p>Konfigurieren Sie Ihren individuellen PC mit den folgenden Optionen:</p>
+        <div class="filter-options">
+          <div class="filter-option" id="budgetOption">
+            <label for="budget">Budget: <span id="budgetValue">2500€</span></label>
+            <input type="range" id="budget" name="budget" min="10" max="10000" step="5" value="2500">
+            <input type="number" id="budgetInput" name="budgetInput" min="10" max="10000" step="5" value="2500" style="width: 80px; margin-left: 10px;">
+          </div>
+          <div class="filter-option" id="cpuOption">
+            <label>CPU:</label>
+            <div class="radio-group">
+              <input type="radio" id="amd" name="cpu" value="AMD">
+              <label for="amd">AMD</label>
+              <input type="radio" id="intel" name="cpu" value="Intel">
+              <label for="intel">Intel</label>
+            </div>
+          </div>
+          <div class="filter-option" id="ramOption">
+            <label for="ram">RAM:</label>
+            <select id="ram" name="ram" onchange="checkRamCapacity()">
+                <option value="8">8GB</option>
+                <option value="16">16GB</option>
+                <option value="32">32GB</option>
+                <option value="64">64GB</option>
+                <option value="128">128GB</option>
+            </select>
+            <div id="ramWarning" class="warning-message" style="color: #ff6b6b; font-size: 0.9em; margin-top: 5px; display: none;"></div>
+          </div>
+          <div class="filter-option" id="usageOption">
+            <label for="usage">Verwendungszweck: <span id="usageValue">Ausgewogen</span></label>
+            <input type="range" id="usage" name="usage" min="0" max="100" step="1" value="50">
+          </div>
+          <button id="configureBtn" class="cta-btn">Configure</button>
+        </div>
+        <div id="loading-screen" class="loading-container hidden">
+          <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Generating Your Perfect PC Build...</h2>
+            <p>Please wait while we analyze components and create your custom configuration.</p>
+          </div>
+        </div>
+        <div id="build-suggestion" class="hidden">
+          <div id="build-suggestion-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My-PCs-Abschnitt -->
+    <div id="my-pcs" class="section hero hidden">
+      <h1>My Created PCs</h1>
+      <div class="text-container">
+        <div id="configurations-list"></div>
+        <div id="configuration-details" class="hidden">
+          <button onclick="showConfigsList()" class="btn btn-secondary mb-4">← Back to List</button>
+          <div id="config-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Funktion zum Anzeigen/Verstecken von Abschnitten
+    function showSection(section) {
+      // Alle Abschnitte verstecken
+      document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+      // Den ausgewählten Abschnitt anzeigen
+      document.getElementById(section).classList.remove('hidden');
+      // Make sure loading screen stays hidden when switching sections
+      document.getElementById('loading-screen').classList.add('hidden');
+    }
+
+    // Initialisierung des Canvas
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray = [];
+
+    // Klasse zur Erstellung und Verwaltung von Partikeln
+    class Particle {
+      constructor(x, y, size, color) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.color = color;
+        this.speedX = Math.random() * 0.5 - 0.25; // Zufällige horizontale Geschwindigkeit
+        this.speedY = Math.random() * 0.5 - 0.25; // Zufällige vertikale Geschwindigkeit
+      }
+
+      // Methode zum Zeichnen des Partikels
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      // Methode zur Aktualisierung der Position und zum Zeichnen des Partikels
+      update() {
+        // Bewege Partikel
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Prüfe auf Kollision mit Rändern und ändere Richtung
+        if (this.x < 0 || this.x > canvas.width) {
+          this.speedX *= -1;
+        }
+        if (this.y < 0 || this.y > canvas.height) {
+          this.speedY *= -1;
+        }
+
+        this.draw();
+      }
+    }
+
+    // Initialisierung der Partikel
+    function init() {
+      particlesArray = [];
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 5 + 1;
+        const x = Math.random() * (canvas.width - size * 2) + size;
+        const y = Math.random() * (canvas.height - size * 2) + size;
+        const color = 'rgba(0, 255, 0, 0.8)';
+        particlesArray.push(new Particle(x, y, size, color));
+      }
+    }
+
+    // Animation der Partikel
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particlesArray.forEach(particle => particle.update());
+    }
+
+    // Start der Animation
+    init();
+    animate();
+
+    // Anpassung bei Fenstergrößenänderung
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    window.addEventListener('load', () => showSection('home'));
+
+    // Funktionalität für Filteroptionen
+    document.addEventListener('DOMContentLoaded', function() {
+      const budgetSlider = document.getElementById('budget');
+      const budgetValue = document.getElementById('budgetValue');
+      const budgetInput = document.getElementById('budgetInput');
+      const usageSlider = document.getElementById('usage');
+      const usageValue = document.getElementById('usageValue');
+      const configureBtn = document.getElementById('configureBtn');
+      const cpuOptions = document.querySelectorAll('input[name="cpu"]');
+      const ramSelect = document.getElementById('ram');
+
+      function updateBudgetValue(value) {
+        budgetValue.textContent = value + '€';
+        budgetSlider.value = value;
+        budgetInput.value = value;
+      }
+
+      function updateSliderTrackColor(slider) {
+        const min = slider.min || 0;
+        const max = slider.max || 100;
+        const value = slider.value;
+        const percentage = ((value - min) / (max - min)) * 100;
+        slider.style.setProperty('--value', `${percentage}%`);
+      }
+
+      budgetSlider.addEventListener('input', function() {
+        updateBudgetValue(this.value);
+        updateSliderTrackColor(this);
+      });
+
+      budgetInput.addEventListener('input', function() {
+        updateBudgetValue(this.value);
+      });
+
+      usageSlider.addEventListener('input', function() {
+        const value = this.value;
+        updateSliderTrackColor(this);
+        let usageText;
+        if (value < 25) {
+          usageText = 'Office-orientiert';
+        } else if (value < 75) {
+          usageText = 'Ausgewogen';
+        } else {
+          usageText = 'Gaming-orientiert';
+        }
+        usageValue.textContent = usageText;
+      });
+
+      configureBtn.addEventListener('click', async function() {
+        const selectedBudget = budgetSlider.value;
+        const selectedCPU = Array.from(cpuOptions).find(option => option.checked)?.value;
+        const selectedRAM = ramSelect.value;
+        const selectedUsage = usageSlider.value;
+
+        console.log('Selected values:', {
+          budget: selectedBudget,
+          cpu: selectedCPU,
+          ram: selectedRAM,
+          usage: selectedUsage
+        });
+
+        // Reset errors
+        document.querySelectorAll('.filter-option').forEach(option => {
+          option.classList.remove('error');
+        });
+
+        let hasError = false;
+
+        if (!selectedBudget) {
+          document.getElementById('budgetOption').classList.add('error');
+          hasError = true;
+        }
+        if (!selectedCPU) {
+          document.getElementById('cpuOption').classList.add('error');
+          hasError = true;
+        }
+        if (!selectedRAM) {
+          document.getElementById('ramOption').classList.add('error');
+          hasError = true;
+        }
+        if (!selectedUsage) {
+          document.getElementById('usageOption').classList.add('error');
+          hasError = true;
+        }
+
+        if (hasError) {
+          return;
+        }
+
+        // Show loading screen
+        document.getElementById('loading-screen').classList.remove('hidden');
+
+        const additionalInfo = `CPU Preference: ${selectedCPU}, RAM: ${selectedRAM}GB, Usage Profile: ${usageValue.textContent}`;
+        
+        try {
+          console.log('Sending request with data:', {
+            budget: selectedBudget,
+            purpose: 'Gaming',
+            additional_info: additionalInfo
+          });
+
+          const response = await fetch('/api/build-suggestion', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              budget: selectedBudget,
+              purpose: 'Gaming',
+              additional_info: additionalInfo
+            })
+          });
+
+          // Hide loading screen
+          document.getElementById('loading-screen').classList.add('hidden');
+
+          console.log('Response status:', response.status);
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.build && Array.isArray(data.build)) {
+                updateBuildSuggestionContent(data);
+            }
+          } else {
+            const errorData = await response.text();
+            console.error('Failed to generate build suggestion:', errorData);
+          }
+        } catch (error) {
+          console.error('Error in try-catch:', error);
+        }
+      });
+
+      // Initial update of slider colors
+      updateSliderTrackColor(budgetSlider);
+      updateSliderTrackColor(usageSlider);
+
+      // Ensure loading screen is hidden on page load
+      document.getElementById('loading-screen').classList.add('hidden');
+    });
+
+    function checkRamCapacity() {
+        const budget = parseFloat(document.getElementById('budget').value);
+        const ramSize = parseInt(document.getElementById('ram').value);
+        const warningDiv = document.getElementById('ramWarning');
+        
+        // Clear any existing warning
+        warningDiv.style.display = 'none';
+        
+        // RAM capacity recommendations based on budget
+        if (budget < 1000) {
+            if (ramSize > 16) {
+                warningDiv.textContent = `${ramSize}GB RAM might be overkill for a €${budget} budget. 16GB is recommended.`;
+                warningDiv.style.display = 'block';
+            }
+        } else if (budget < 2000) {
+            if (ramSize > 32) {
+                warningDiv.textContent = `${ramSize}GB RAM might be overkill for a €${budget} budget. 32GB is recommended.`;
+                warningDiv.style.display = 'block';
+            }
+        } else if (budget < 3000) {
+            if (ramSize > 64) {
+                warningDiv.textContent = `${ramSize}GB RAM might be overkill for a €${budget} budget. 64GB is recommended.`;
+                warningDiv.style.display = 'block';
+            }
+        }
+    }
+
+    // Add this to existing event listeners
+    document.getElementById('budget').addEventListener('input', checkRamCapacity);
+    document.addEventListener('DOMContentLoaded', checkRamCapacity);
+
+    function saveConfiguration(buildDataString) {
+        try {
+            const buildData = JSON.parse(buildDataString);
+            const configName = document.getElementById('configName').value.trim();
+            const userId = localStorage.getItem('userId');
+
+            if (!userId) {
+                alert('Bitte melden Sie sich an, um eine Konfiguration zu speichern.');
+                window.location.href = '/';
+                return;
+            }
+
+            if (!configName) {
+                alert('Please enter a name for your configuration');
+                return;
+            }
+
+            // Ensure the filename ends with .txt
+            const fileName = configName.endsWith('.txt') ? configName : configName + '.txt';
+
+            // Format the configuration data as text
+            const configText = `Configuration: ${fileName}\n\n` + 
+                buildData.build.map(component => 
+                    `${component.type}:\n` +
+                    `Name: ${component.name}\n` +
+                    `Price: €${component.price}\n` +
+                    `Description: ${component.description}\n` +
+                    `URL: ${component.url}\n`
+                ).join('\n') +
+                `\nTotal Price: €${buildData.total_price}`;
+
+            // Send the data to the server
+            fetch('/save-config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: fileName,
+                    content: configText,
+                    userId: userId  // Include the user ID in the request
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Configuration saved successfully!');
+                } else {
+                    alert('Error saving configuration: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving configuration');
+            });
+        } catch (error) {
+            console.error('Error parsing build data:', error);
+            alert('Error processing configuration data');
+        }
+    }
+
+    // Add these functions for My PCs functionality
+    function showConfigsList() {
+      document.getElementById('configurations-list').classList.remove('hidden');
+      document.getElementById('configuration-details').classList.add('hidden');
+    }
+
+    function showConfigDetails(content) {
+      document.getElementById('configurations-list').classList.add('hidden');
+      document.getElementById('configuration-details').classList.remove('hidden');
+      
+      // Parse the configuration content
+      const lines = content.split('\n');
+      let currentComponent = null;
+      let components = [];
+      let component = {};
+      
+      for (const line of lines) {
+        if (line.trim() === '') continue; // Skip empty lines
+        
+        if (line.endsWith(':')) {
+          currentComponent = line.slice(0, -1);
+          if (currentComponent !== 'Configuration') { // Skip the configuration name line
+            component = { type: currentComponent };
+          }
+        } else if (line.includes(':') && currentComponent && currentComponent !== 'Configuration') {
+          const [key, ...valueParts] = line.split(': ');
+          const value = valueParts.join(': '); // Rejoin in case the value contains colons
+          
+          if (key === 'Name') component.name = value;
+          if (key === 'Price') component.price = value;
+          if (key === 'Description') component.description = value;
+          if (key === 'URL') {
+            component.url = value;
+            components.push({...component}); // Add a copy of the component
+          }
+        }
+      }
+
+      // Generate HTML for components
+      const componentsHtml = components
+        .filter(comp => comp.type && comp.name && comp.name !== 'undefined')
+        .map(comp => {
+          let icon = '';
+          switch (comp.type) {
+            case 'CPU': icon = '<i class="fas fa-microchip"></i>'; break;
+            case 'Motherboard': icon = '<i class="fas fa-circuit-board"></i>'; break;
+            case 'RAM': icon = '<i class="fas fa-memory"></i>'; break;
+            case 'GPU': icon = '<i class="fas fa-tv"></i>'; break;
+            case 'Storage': icon = '<i class="fas fa-hdd"></i>'; break;
+            case 'Case': icon = '<i class="fas fa-box"></i>'; break;
+            case 'Power Supply': icon = '<i class="fas fa-bolt"></i>'; break;
+            case 'CPU Cooler': icon = '<i class="fas fa-fan"></i>'; break;
+            case 'Case Fans': icon = '<i class="fas fa-fan"></i>'; break;
+            case 'Thermal Paste': icon = '<i class="fas fa-temperature-high"></i>'; break;
+            default: icon = '<i class="fas fa-microchip"></i>';
+          }
+          return `
+            <div class="config-item">
+              <h3>${icon} ${comp.type}</h3>
+              <p><strong>${comp.name}</strong></p>
+              <p>${comp.description || ''}</p>
+              <p class="price">${comp.price}</p>
+              <a href="${comp.url}" target="_blank">View Details</a>
+            </div>
+          `;
+        })
+        .join('');
+
+      document.getElementById('config-content').innerHTML = `
+        <div class="config-details">
+          <div class="config-grid">
+            ${componentsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function loadConfigurations() {
+      fetch('/api/get-configs')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const configsList = document.getElementById('configurations-list');
+            if (data.configurations.length === 0) {
+              configsList.innerHTML = '<p>No configurations found. Create your first PC configuration!</p>';
+              return;
+            }
+
+            const configurationsHtml = data.configurations.map(config => {
+              const configName = config.content.split('\n')[0].split(': ')[1];
+              const date = config.created_at ? new Date(config.created_at).toLocaleDateString() : 'N/A';
+              return `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">${configName}</h5>
+                    <p class="card-text"><small class="text-muted">Created: ${date}</small></p>
+                    <button onclick='showConfigDetails(${JSON.stringify(config.content)})'
+                            class="btn btn-primary">View Details</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            configsList.innerHTML = configurationsHtml;
+          } else {
+            document.getElementById('configurations-list').innerHTML = 
+              '<p class="text-danger">Error loading configurations: ' + (data.error || 'Unknown error') + '</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('configurations-list').innerHTML = 
+            '<p class="text-danger">Error loading configurations</p>';
+        });
+    }
+
+    // Add event listener for section changes
+    document.querySelectorAll('.taskbar a').forEach(link => {
+      link.addEventListener('click', function() {
+        if (this.getAttribute('onclick').includes("showSection('my-pcs')")) {
+          loadConfigurations();
+        }
+      });
+    });
+
+    // User Profile Functions
+    function loadUserProfile() {
+      const userId = localStorage.getItem('userId');
+      const username = localStorage.getItem('username');
+      
+      if (userId && username) {
+        document.getElementById('dropdown-username').textContent = username;
+        
+        // Fetch user info and generate fresh news content
+        fetch('/api/user-info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('dropdown-email').textContent = data.email;
+            document.getElementById('dropdown-username').textContent = data.username;
+            
+            // Always load fresh news content when page loads
+            loadAIGeneratedNews();
+          } else {
+            console.error('Failed to load user info:', data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching user info:', error);
+        });
+      } else {
+        window.location.href = '/';
+      }
+    }
+
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.classList.toggle('show');
+    }
+
+    function showChangePasswordModal() {
+      document.getElementById('passwordModal').style.display = 'block';
+    }
+
+    function closePasswordModal() {
+      document.getElementById('passwordModal').style.display = 'none';
+      document.getElementById('changePasswordForm').reset();
+    }
+
+    async function handlePasswordChange(event) {
+      event.preventDefault();
+      
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+      if (newPassword !== confirmNewPassword) {
+        alert('New passwords do not match');
+        return false;
+      }
+
+      try {
+        const response = await fetch('/api/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword
+          })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Password changed successfully');
+          closePasswordModal();
+        } else {
+          alert(data.message || 'Failed to change password');
+        }
+      } catch (error) {
+        console.error('Error changing password:', error);
+        alert('An error occurred while changing password');
+      }
+
+      return false;
+    }
+
+    function logout() {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      window.location.href = '/logout';
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(event) {
+      if (!event.target.closest('.user-profile')) {
+        document.getElementById('userDropdown').classList.remove('show');
+      }
+    });
+
+    // Make sure we load the profile when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserProfile();
+    });
+
+    // Add this function to handle news generation
+    async function loadAIGeneratedNews() {
+      try {
+        // Show loading message in news section
+        const newsContainer = document.getElementById('title').querySelector('.text-container');
+        newsContainer.innerHTML = '<p>Loading latest PC hardware news...</p>';
+        
+        // Get the topic if provided
+        const topic = document.getElementById('newsTopicInput').value.trim();
+        
+        const response = await fetch('/api/generate-news' + (topic ? `?topic=${encodeURIComponent(topic)}` : ''));
+        const data = await response.json();
+        
+        if (data.success) {
+          // Update the news section with AI-generated content
+          newsContainer.innerHTML = data.content;
+          // Clear the topic input after successful generation
+          document.getElementById('newsTopicInput').value = '';
+        } else {
+          console.error('Failed to load news:', data.error);
+          newsContainer.innerHTML = '<p>Failed to load news. Please try again later.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading news:', error);
+        const newsContainer = document.getElementById('title').querySelector('.text-container');
+        newsContainer.innerHTML = '<p>Error loading news. Please try again later.</p>';
+      }
+    }
+
+    // Update the build suggestion content generation in loadAIGeneratedNews function
+    function updateBuildSuggestionContent(buildData) {
+      const buildHtml = buildData.build.map(component => {
+        let icon = '';
+        switch (component.type) {
+          case 'CPU': icon = '<i class="fas fa-microchip"></i>'; break;
+          case 'Motherboard': icon = '<i class="fas fa-circuit-board"></i>'; break;
+          case 'RAM': icon = '<i class="fas fa-memory"></i>'; break;
+          case 'GPU': icon = '<i class="fas fa-tv"></i>'; break;
+          case 'Storage': icon = '<i class="fas fa-hdd"></i>'; break;
+          case 'Case': icon = '<i class="fas fa-box"></i>'; break;
+          case 'Power Supply': icon = '<i class="fas fa-bolt"></i>'; break;
+          case 'CPU Cooler': icon = '<i class="fas fa-fan"></i>'; break;
+          case 'Case Fans': icon = '<i class="fas fa-fan"></i>'; break;
+          case 'Thermal Paste': icon = '<i class="fas fa-temperature-high"></i>'; break;
+          default: icon = '<i class="fas fa-microchip"></i>';
+        }
+        return `
+          <div class="config-item">
+            <h3>${icon} ${component.type}</h3>
+            <p><strong>${component.name}</strong></p>
+            <p>${component.description}</p>
+            <p class="price">€${component.price}</p>
+            <a href="${component.url}" target="_blank">View Details</a>
+          </div>
+        `;
+      }).join('');
+
+      const totalHtml = `
+        <div class="mt-4">
+          <h3>Total Price: €${buildData.total_price}</h3>
+          <p class="text-muted">* Prices might vary due to market fluctuations.</p>
+          <div class="save-configuration mt-3">
+            <input type="text" id="configName" class="form-control mb-2" placeholder="Enter configuration name">
+            <button onclick='saveConfiguration(${JSON.stringify(JSON.stringify(buildData))})' class="btn btn-success">Save Configuration</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('build-suggestion-content').innerHTML = `
+        <h1 class="mb-4">Build Suggestion</h1>
+        <div class="config-grid">
+          ${buildHtml}
+        </div>
+        ${totalHtml}
+      `;
+      document.getElementById('build-suggestion').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
