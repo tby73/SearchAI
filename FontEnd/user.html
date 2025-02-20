@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SearchAI - User Mode</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.getElementById("search");
+      const priceFilter = document.getElementById("price");
+      const rankingFilter = document.getElementById("ranking");
+      const targetGroupFilter = document.getElementById("targetGroup");
+      const cardContainer = document.getElementById("card-container");
+      const adminLoginBtn = document.getElementById("admin-login");
+
+      let data = [
+        {
+          name: "ChatGPT",
+          link: "https://openai.com/chatgpt",
+          description: "Ein KI-gestützter Chatbot von OpenAI.",
+          type: "Software",
+          price: "Kostenlos / Abo",
+          ranking: 5,
+          targetGroup: "Entwickler & Forscher"
+        },
+        {
+          name: "Midjourney",
+          link: "https://www.midjourney.com",
+          description: "Ein KI-Bildgenerator für Kreative.",
+          type: "Kreative KI",
+          price: "Abo",
+          ranking: 4,
+          targetGroup: "Kreative & Künstler"
+        }
+      ];
+
+      function renderData() {
+        const searchValue = searchInput.value.toLowerCase();
+        const priceValue = priceFilter.value;
+        const rankingValue = rankingFilter.value;
+        const targetGroupValue = targetGroupFilter.value;
+
+        const filteredData = data.filter(item =>
+          (item.name.toLowerCase().includes(searchValue) || item.description.toLowerCase().includes(searchValue)) &&
+          (priceValue ? item.price === priceValue : true) &&
+          (rankingValue ? item.ranking.toString() === rankingValue : true) &&
+          (targetGroupValue ? item.targetGroup === targetGroupValue : true)
+        );
+
+        cardContainer.innerHTML = filteredData.map(item => `
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">${item.name}</h2>
+            <p class="text-gray-600">${item.description}</p>
+            <a href="${item.link}" target="_blank" class="text-blue-500 underline">Mehr erfahren</a>
+            <p class="mt-2"><strong>Typ:</strong> ${item.type}</p>
+            <p><strong>Preis:</strong> ${item.price}</p>
+            <p><strong>Ranking:</strong> ${'⭐'.repeat(item.ranking)}</p>
+            <p><strong>Zielgruppe:</strong> ${item.targetGroup}</p>
+          </div>
+        `).join("");
+      }
+
+      searchInput.addEventListener("input", renderData);
+      priceFilter.addEventListener("change", renderData);
+      rankingFilter.addEventListener("change", renderData);
+      targetGroupFilter.addEventListener("change", renderData);
+
+      adminLoginBtn.addEventListener("click", function () {
+        window.location.href = "admin.html";
+      });
+
+      renderData();
+    });
+  </script>
+</head>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">SearchAI - User Mode</h1>
+    <div class="flex justify-between mb-6">
+      <div class="flex flex-wrap gap-4">
+        <input id="search" type="text" placeholder="🔍 Name oder Beschreibung suchen..." class="p-2 border rounded w-full md:w-1/3" />
+        <select id="price" class="p-2 border rounded">
+          <option value="">Preis</option>
+          <option value="Kostenlos">Kostenlos</option>
+          <option value="Kostenlos / Abo">Kostenlos / Abo</option>
+          <option value="Abo">Abo</option>
+        </select>
+      </div>
+      <button id="admin-login" class="bg-green-500 text-white p-2 rounded">Admin-Login</button>
+    </div>
+
+    <div id="card-container" class="grid gap-4"></div>
+  </div>
+</body>
+</html>
