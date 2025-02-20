@@ -835,31 +835,31 @@
 
     /* Main Content Container */
     .search-ai__container {
-      position: relative;
       width: 100%;
       max-width: 1200px;
       margin: 80px auto 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      padding: 0 20px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
     }
 
     /* White Background Container */
     .search-ai__content-box {
       width: 100%;
       max-width: 1200px;
-      margin: 0 auto;
       padding: 20px;
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
+      box-sizing: border-box;
     }
 
     /* Filter Section */
     .search-ai__filter-section {
       width: 100%;
+      max-width: 1000px; /* Erhöhte Breite für die Filterboxen */
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -910,8 +910,8 @@
 
   <!-- Site Logo -->
   <div class="site-logo">
-    <img src="{{ url_for('static', filename='images/Light_Mode_Logo.jpeg') }}" alt="P2C Logo" class="site-logo__image site-logo__image--light">
-    <img src="{{ url_for('static', filename='images/Dark_Mode_Logo.jpeg') }}" alt="P2C Logo" class="site-logo__image site-logo__image--dark">
+    <img src="Images/Light_Mode_Logo.png" alt="Light Logo" class="site-logo__image site-logo__image--light">
+    <img src="Images/Dark_Mode_Logo.png" alt="Dark Logo" class="site-logo__image site-logo__image--dark">
   </div>
 
   <!-- Nach dem Site Logo und vor der Taskbar -->
