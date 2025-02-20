@@ -3,6 +3,12 @@
 //**********************************************************************//
 
 let data = [];
+update();
+
+function update(){
+    read_and_save_xlsx_file();
+    //searching(); //comparing with the actual ki_data
+}
 
 function read_and_save_xlsx_file(){ //there is the corrosponding description/name
     //first we have to read the corrosponding data
@@ -12,7 +18,7 @@ function read_and_save_xlsx_file(){ //there is the corrosponding description/nam
     const file_type = require("xlsx");
     
     //reading our exel file 
-    const file = file_type.readFile("./KI-Liste.xlsx"); // "./" the path is dynamic and we only need to type the name of the file
+    const file = file_type.readFile("./KI_Liste_test.xlsx"); // "./" the path is dynamic and we only need to type the name of the file
 
     const sheets = file.SheetNames; //we have sheets for the exel file, cause else, it would to annoying to read the data in a elegant way
 
@@ -33,7 +39,7 @@ function reset(){ //when were reseting the data currently used to compare.
 
 function searching(){ //when user tries to search, here we will give him tips
     const searchbar = document.getElementById("search");
-
+    console.log(searchbar.innerText);
     //now we will compare the written thing with our data we have and give the user a valued answer
     if(searchbar.innerText != ""){
         compare(text);
