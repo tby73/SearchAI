@@ -5,7 +5,7 @@ import openai
 # === Configuration ===
 GOOGLE_API_KEY = "AIzaSyCCTtud8DuE2-UUSip6HehdWJ4VltUIldc"  # Your Google API key
 CUSTOM_SEARCH_ENGINE_ID = "117017048ee1b4217"  # Your Custom Search Engine ID (cx)
-OPENAI_API_KEY = "REPLACE-WITH-YOUR-OPENAI-API-KEY"
+OPENAI_API_KEY = "YOUR-OPENAI-API-KEY"
 # =======================
 
 def generate_search_keywords(query_description, openai_api_key):
