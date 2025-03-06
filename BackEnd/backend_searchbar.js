@@ -121,13 +121,17 @@ function read_from_sql(){ //with the help of https://www.w3schools.com/nodejs/no
     
     var connection = mysql.createConnection({
         host: "localhost",
-        user: "user",
+        user: "",
         port: "3306",
-        password: "password",
+        password: "",
         database: "mysql"
     });
+
+    console.log(connection);
+    console.log("I'm in!");
     
     app.get('/mysql', function(req, res){
+        const queryString = "SELECT * FROM your_table";
         connection.query(queryString, function(err, rows, fields){
             if(err){
                 console.log("\n......\n......\n......\n......\n");
