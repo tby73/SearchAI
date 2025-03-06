@@ -745,7 +745,7 @@
       padding: 20px;
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px #FFFBEF;
     }
 
     /* Filter options container */
@@ -763,7 +763,7 @@
       padding: 15px;
       background-color: #f8f9fa;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px #FFFBEF;
     }
 
     /* Loading container */
@@ -805,15 +805,15 @@
     /* Dark mode adjustments */
     [data-theme="dark"] .text-container,
     [data-theme="dark"] .filter-options {
-      background-color: rgba(40, 40, 40, 0.9);
+      background-color: #FFFBEF;
     }
 
     [data-theme="dark"] .filter-option {
-      background-color: #2c2c2c;
+      background-color: #FFFBEF;
     }
 
     [data-theme="dark"] .loading-content {
-      background: rgba(40, 40, 40, 0.95);
+      background: #FFFBEF;
     }
 
     /* Main Content Container */
@@ -834,7 +834,7 @@
       padding: 20px;
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px #FFFBEF;
       box-sizing: border-box;
     }
 
@@ -853,12 +853,12 @@
       padding: 15px;
       background-color: #f8f9fa;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px #FFFBEF;
     }
 
     /* Dark Mode Adjustments */
     [data-theme="dark"] .site-logo {
-      background-color: rgba(40, 40, 40, 0.9);
+      background-color: rgba(40, 40, 40, 0.9) ;
     }
 
     [data-theme="dark"] .site-logo__image--light {
@@ -870,11 +870,11 @@
     }
 
     [data-theme="dark"] .search-ai__content-box {
-      background-color: rgba(40, 40, 40, 0.9);
+      background-color: #4b4b4b;
     }
 
     [data-theme="dark"] .search-ai__filter-item {
-      background-color: #2c2c2c;
+      background-color: #5d5d5d;
     }
 
     /* Responsive Design */
@@ -884,6 +884,21 @@
       .search-ai__content-box {
         width: 95%;
       }
+    }
+
+    [data-theme="dark"] .hero,
+    [data-theme="dark"] .hero .text-container {
+      background-color: transparent; /* Transparenter Hintergrund */
+    }
+
+    [data-theme="dark"] .hero h1,
+    [data-theme="dark"] .hero p {
+      color: #fff; /* Hellerer Text für bessere Lesbarkeit */
+    }
+
+    [data-theme="dark"] body,
+    [data-theme="dark"] .main-content {
+      background-color: transparent; /* Transparenter Hintergrund */
     }
   </style>
 </head>
