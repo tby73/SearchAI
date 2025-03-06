@@ -18,10 +18,12 @@ let data_Robotik_and_Automatisierung = [];
 //******************************************//
 //******************************************//
 //******************************************//
-update(); //testing my code with the following method
+// update(); //testing my code with the following method
+read_from_sql();
 //******************************************//
 //******************************************//
 //******************************************//
+debugger;
 
 function update(){
     read_and_save_xlsx_file();
@@ -39,7 +41,7 @@ function read_and_save_xlsx_file(){ //there is the corrosponding description/nam
     const file_type = require("xlsx");
 
     //reading our exel file 
-    const file = file_type.readFile("./KI_Liste_test.xlsx"); // "./" the path is dynamic and we only need to type the name of the file
+    const file = file_type.readFile("./KI_Liste_V2.xlsx"); // "./" the path is dynamic and we only need to type the name of the file
 
     const sheets = file.SheetNames; //we have sheets for the exel file, cause else, it would to annoying to read the data in a elegant way
 
@@ -111,6 +113,34 @@ function reset(){ //when were reseting the data currently used to compare.
     let data_Bild_and_Video_Generation = []; 
     let data_Robotik_and_Automatisierung = []; 
 }
+
+function read_from_sql(){ //with the help of https://www.w3schools.com/nodejs/nodejs_mysql_select.asp 
+    var mysql = require('mysql');
+    var express = require('express');
+    var app = express();
+    
+    var connection = mysql.createConnection({
+        host: "localhost",
+        user: "user",
+        port: "3306",
+        password: "password",
+        database: "mysql"
+    });
+    
+    app.get('/mysql', function(req, res){
+        connection.query(queryString, function(err, rows, fields){
+            if(err){
+                console.log("\n......\n......\n......\n......\n");
+                console.log(result);
+                console.log("\n......\n......\n......\n......\n");
+                console.log(fields);
+            }
+        });
+    });
+}
+
+
+
 
 function transfer_json_to_txt_file(json_file){
     const fs = require("fs");
