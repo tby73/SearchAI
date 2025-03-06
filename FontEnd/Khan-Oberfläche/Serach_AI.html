@@ -22,7 +22,7 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 1200px;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: #86B1EE; /* Helleres Blau für die Taskbar */
       border-radius: 0 0 10px 10px;
       padding: 10px 0;
       display: flex;
@@ -160,9 +160,9 @@
 
     /* Styling für Call-to-Action Buttons */
     .cta-btn {
-      background-color: #009B48;
+      background-color: #41E3FF;
       padding: 15px 40px;
-      color: #ffffff;
+      color: #333; /* Standard-Schriftfarbe für Light Mode */
       border: none; /* Kein Rahmen */
       border-radius: 5px;
       font-size: 18px;
@@ -174,7 +174,7 @@
     }
 
     .cta-btn:hover {
-      background-color: #007A3D; /* Dunkleres Grün beim Hover */
+      background-color: #2F9ACF; /* Dunklerer Farbton beim Hover */
     }
 
     /* Styling für den Hintergrund-Canvas */
@@ -473,28 +473,24 @@
       display: none !important;
     }
 
-    /* Logo styles */
+    /* Logo Styling */
     .site-logo {
       position: fixed;
-      top: 15px;
-      left: 20px;
+      top: 0;
+      left: 20px; /* Positioniere das Logo oben links */
       z-index: 1002;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
+      height: 60px; /* Gleiche Höhe wie die Taskbar */
+      display: flex;
+      align-items: center;
     }
 
     .site-logo__image {
-      width: 100%;
       height: 100%;
+      width: auto; /* Beibehaltung des Seitenverhältnisses */
       object-fit: contain;
-      border-radius: 50%;
     }
 
+    /* Logo visibility based on theme */
     .site-logo__image--light {
       display: block;
     }
@@ -503,25 +499,12 @@
       display: none;
     }
 
-    /* Logo visibility based on theme */
-    .light-logo {
-      display: block;
-    }
-
-    .dark-logo {
+    [data-theme="dark"] .site-logo__image--light {
       display: none;
     }
 
-    [data-theme="dark"] .light-logo {
-      display: none;
-    }
-
-    [data-theme="dark"] .dark-logo {
+    [data-theme="dark"] .site-logo__image--dark {
       display: block;
-    }
-
-    [data-theme="dark"] .site-logo {
-      background-color: rgba(40, 40, 40, 0.9);
     }
 
     /* Styling for checkbox group */
@@ -672,16 +655,16 @@
 
     /* Dark Mode Styles */
     [data-theme="dark"] {
-      background-color: #1a1a1a;
+      background-color: #545454;
       color: #ffffff;
     }
 
     [data-theme="dark"] .taskbar {
-      background-color: rgba(40, 40, 40, 0.9);
+      background-color: #FFFBEF;
     }
 
     [data-theme="dark"] .taskbar a {
-      color: #ffffff;
+      color: #4C9CE3; /* Schriftfarbe für Buttons im Dark Mode */
     }
 
     [data-theme="dark"] .taskbar a:hover {
@@ -1085,7 +1068,7 @@
         const size = Math.random() * 5 + 1;
         const x = Math.random() * (canvas.width - size * 2) + size;
         const y = Math.random() * (canvas.height - size * 2) + size;
-        const color = 'rgba(0, 255, 0, 0.8)';
+        const color = document.documentElement.getAttribute('data-theme') === 'dark' ? '#EFE3D6' : '#86B1EE';
         particlesArray.push(new Particle(x, y, size, color));
       }
     }
@@ -1155,6 +1138,7 @@
         document.documentElement.setAttribute('data-theme', 'light');
         localStorage.setItem('theme', 'light');
       }
+      init(); // Reinitialisiere die Partikel mit der neuen Farbe
     }
 
     toggleSwitch.addEventListener('change', switchTheme, false);
