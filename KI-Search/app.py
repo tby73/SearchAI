@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 import os
 import KI_searches_KIs as ki  # Import your script (rename the file to use underscores)
+import markdown  # Add this import for Markdown to HTML conversion
 
 app = Flask(__name__)
 # Get the directory where app.py is located
@@ -56,8 +57,9 @@ def search_ai():
             ki.OPENAI_API_KEY
         )
 
-        # Format the summary as HTML
-        formatted_results = f"<h3>AI Solutions for: {query}</h3><div>{summary.replace('\n', '<br>')}</div>"
+        # Format the summary as HTML, properly converting Markdown
+        html_content = markdown.markdown(summary)
+        formatted_results = f"<h3>AI Solutions for: {query}</h3><div>{html_content}</div>"
 
         return jsonify({'success': True, 'results': formatted_results})
 
