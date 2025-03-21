@@ -96,7 +96,7 @@ def summarize_results_with_chatgpt(search_results, original_query, openai_api_ke
     """
     Uses the gpt-4o-mini model to summarize the search results.
     This version instructs the model to only list actual AI tools (official product pages or company websites)
-    that provide solutions for testing software vulnerabilities, excluding blog posts, reviews, and comparisons.
+    that provide solutions for the user's query, excluding blog posts, reviews, and comparisons.
     """
     if not openai_api_key:
         print("Error: No OpenAI API key provided.")
@@ -120,9 +120,10 @@ def summarize_results_with_chatgpt(search_results, original_query, openai_api_ke
         f"The original request is: '{original_query}'.\n\n"
         "Below are Google search results related to the request:\n\n"
         f"{search_context}\n\n"
-        "Based on the above search results, please provide an objective summary listing only the actual AI tools or products that are designed to test software vulnerabilities. "
+        f"Based on the above search results, please provide an objective summary listing only the actual AI tools or products that can help with '{original_query}'. "
         "Only include official product pages or company websites that directly offer an AI solution, and do not include blog posts, review articles, or comparison pages. "
-        "For each tool, list its name, a brief description, and the URL. If no official tool is found, state that explicitly."
+        "For each tool, list its name, a brief description, and the URL. If no official tool is found, state that explicitly. "
+        "Format the output so that 'Description' and 'URL' are not treated as list items."
     )
 
     messages = [
