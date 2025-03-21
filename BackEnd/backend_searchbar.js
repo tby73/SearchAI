@@ -18,8 +18,44 @@ let data_Robotik_and_Automatisierung = [];
 //******************************************//
 //******************************************//
 //******************************************//
-// update(); //testing my code with the following method
-read_from_sql();
+let data_NLP_link = []; 
+let data_NLP_name = []; 
+
+let data_Legal_Tech_link = [];
+let data_Legal_Tech_name = [];
+
+let data_Kreativwerkzeuge_link = [];
+let data_Kreativwerkzeuge_name = [];
+
+let data_Predictive_Analystic_link = [];
+let data_Predictive_Analystic_name = []; 
+
+let data_Empfehlungssysteme_link = [];
+let data_Empfehlungssysteme_name = [];
+
+let data_Sprachassistenten_link = []; 
+let data_Sprachassistenten_name = []; 
+
+let data_Multimodel_link = []; 
+let data_Multimodel_name = []; 
+
+let data_Game_AI_link = [];
+let data_Game_AI_name = [];
+
+let data_Code_Generation_link = []; 
+let data_Code_Generation_name = []; 
+
+let data_Bild_and_Video_Generation_link = []; 
+let data_Bild_and_Video_Generation_name = []; 
+
+let data_Robotik_and_Automatisierung_link = []; 
+let data_Robotik_and_Automatisierung_name = []; 
+
+//******************************************//
+//******************************************//
+//******************************************//
+update(); //testing my code with the following method
+//read_from_sql(); //well right now its not working, so fuck it
 //******************************************//
 //******************************************//
 //******************************************//
@@ -27,9 +63,157 @@ debugger;
 
 function update(){
     read_and_save_xlsx_file();
+    extract_data();
     //searching(); //comparing with the actual ki_data
 }
 
+
+function extract_data(){
+    //NLP - 1
+    for (let i = 0; i < data_NLP.length; i++) {
+        const item = JSON.stringify(data_NLP[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_NLP_name.push(item_split_name); //saving 
+        data_NLP_link.push(item_split_link); //saving
+        //console.log(item_split_link);    
+        //console.log(item_split_name);    
+    }
+
+    //Legal Tech - 2
+    for (let i = 0; i < data_Legal_Tech.length; i++) {
+        const item = JSON.stringify(data_Legal_Tech[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Legal_Tech_name.push(item_split_name); //saving 
+        data_Legal_Tech_link.push(item_split_link); //saving
+        //console.log(data_Legal_Tech_link[i]);    
+        //console.log(data_Legal_Tech_name[i]);    
+    }
+
+    //Kreativwerkzeuge - 3
+    for (let i = 0; i < data_Kreativwerkzeuge.length; i++) {
+        const item = JSON.stringify(data_Kreativwerkzeuge[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Kreativwerkzeuge_name.push(item_split_name); //saving 
+        data_Kreativwerkzeuge_link.push(item_split_link); //saving
+        console.log(data_Kreativwerkzeuge_link[i]);    
+        console.log(data_Kreativwerkzeuge_name[i]);    
+    }
+
+    //Predictive Analystic - 4
+    for (let i = 0; i < data_Predictive_Analystic.length; i++) {
+        const item = JSON.stringify(data_Predictive_Analystic[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Predictive_Analystic_name.push(item_split_name); //saving 
+        data_Predictive_Analystic_link.push(item_split_link); //saving
+        //console.log(data_Predictive_Analystic_link[i]);    
+        //console.log(data_Predictive_Analystic_name[i]);    
+    }
+
+    //Empfehlungssyteme - 5
+    for (let i = 0; i < data_Empfehlungssysteme.length; i++) {
+        const item = JSON.stringify(data_Empfehlungssysteme[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Empfehlungssysteme_name.push(item_split_name); //saving 
+        data_Empfehlungssysteme_link.push(item_split_link); //saving
+        //console.log(data_Empfehlungssysteme_link[i]);    
+        //console.log(data_Empfehlungssysteme_name[i]);    
+    }
+
+    //Sprachassistenten - 6
+    for (let i = 0; i < data_Sprachassistenten.length; i++) {
+        const item = JSON.stringify(data_Sprachassistenten[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Sprachassistenten_name.push(item_split_name); //saving 
+        data_Sprachassistenten_link.push(item_split_link); //saving
+        //console.log(data_Sprachassistenten_link[i]);    
+        //console.log(data_Sprachassistenten_name[i]);    
+    }
+
+    //Multimodel - 7 
+    for (let i = 0; i < data_Multimodel.length; i++) {
+        const item = JSON.stringify(data_Multimodel[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Multimodel_name.push(item_split_name); //saving 
+        data_Multimodel_link.push(item_split_link); //saving
+        //console.log(data_Multimodel_link[i]);    
+        //console.log(data_Multimodel_name[i]);    
+    }
+
+    //Game AI - 8 
+    for (let i = 0; i < data_Game_AI.length; i++) {
+        const item = JSON.stringify(data_Game_AI[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Game_AI_name.push(item_split_name); //saving 
+        data_Game_AI_link.push(item_split_link); //saving
+        //console.log(data_Game_AI_link[i]);    
+        //console.log(data_Game_AI_name[i]);    
+    }
+
+    //Code Generation - 9 
+    for (let i = 0; i < data_Code_Generation.length; i++) {
+        const item = JSON.stringify(data_Code_Generation[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Code_Generation_name.push(item_split_name); //saving 
+        data_Code_Generation_link.push(item_split_link); //saving
+        //console.log(data_Code_Generation_link[i]);    
+        //console.log(data_Code_Generation_name[i]);    
+    }
+
+    //Bild und Video Generation - 10 
+    for (let i = 0; i < data_Bild_and_Video_Generation.length; i++) {
+        const item = JSON.stringify(data_Bild_and_Video_Generation[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Bild_and_Video_Generation_name.push(item_split_name); //saving 
+        data_Bild_and_Video_Generation_link.push(item_split_link); //saving
+        //console.log(data_Bild_and_Video_Generation_link[i]);    
+        //console.log(data_Bild_and_Video_Generation_name[i]);    
+    }
+
+    //Robotik und Automatisierung - 11
+    for (let i = 0; i < data_Robotik_and_Automatisierung.length; i++) {
+        const item = JSON.stringify(data_Robotik_and_Automatisierung[i]);
+        console.log(`Lets go ${i}: ` + item);
+        //our parameter: Lets go 8: {"NLP (Natural Language Processing)":"HuggingChat (Hugging Face)","__EMPTY":"https://huggingface.co/chat/"}
+        const item_split_name = item.split(`"__EMPTY":`)[0]?.trim().split(`"`)[3];        
+        const item_split_link = item.split(`"__EMPTY":`)[1]?.trim().split(`"`)[1];    
+        data_Robotik_and_Automatisierung_name.push(item_split_name); //saving 
+        data_Robotik_and_Automatisierung_link.push(item_split_link); //saving
+        //console.log(data_Robotik_and_Automatisierung_link[i]);    
+        //console.log(data_Robotik_and_Automatisierung_name[i]);    
+    }
+
+
+}
 function read_and_save_xlsx_file(){ //there is the corrosponding description/name
     //lets clear the save datas, or else we will stack our items to an insanely level
     reset();
