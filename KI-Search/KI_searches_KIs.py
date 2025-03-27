@@ -10,23 +10,22 @@ OPENAI_API_KEY = "YOUR-OPENAI-API-KEY"
 
 def generate_search_keywords(query_description, openai_api_key):
     """
-    Uses the gpt-4o-mini model to generate a broad Google search query string
-    for AI solutions related to voice cloning and text-to-speech. The prompt instructs the model
-    to return a natural plain-English query without enclosing it in quotes or adding overly strict boolean operators.
+    Uses the gpt-4o-mini model to generate a simple, direct Google search query string
+    for AI tools related to the user's request.
     """
     openai.api_key = openai_api_key
     messages = [
         {
             "role": "system",
             "content": (
-                "You are an expert search query generator. Generate a natural, broad Google search query in plain English "
-                "that, when used, will return a range of relevant pages—including official product pages and company websites—"
-                "for AI voice cloning and text-to-speech solutions. Do not enclose the query in quotes and do not include unnecessary punctuation."
+                "You are an expert search query generator. Generate a SIMPLE and DIRECT Google search query to find AI tools/products for the user's request. "
+                "Focus on core keywords plus 'AI tool' or 'AI platform'. Avoid complex operators or excessive negative keywords unless absolutely essential for clarity. "
+                "Example: If the request is 'financial advice', generate something like 'AI financial advice tool' or 'AI financial planning platform'."
             )
         },
         {
             "role": "user",
-            "content": f"Generate a search query for the request: '{query_description}'."
+            "content": f"Generate a simple, direct search query for AI tools/products that provide: '{query_description}'."
         }
     ]
     try:
@@ -44,21 +43,25 @@ def generate_search_keywords(query_description, openai_api_key):
         print("Error generating search keywords:", str(e))
         return query_description
 
-def get_google_search_results(query, google_api_key, cx, count=5):
+def get_google_search_results(query, google_api_key, cx, count=10):
     """
     Retrieve search results from the Google Custom Search JSON API using the provided keys.
-    This version also filters out pages that are obviously not official AI tool pages—such as blog posts.
+    This version uses strong filtering on the results of a simpler query.
     """
     if not google_api_key or not cx:
         print("Error: Google API key and Custom Search Engine ID are required.")
         return None
 
+    # Ensure basic AI terms are present if not already implied by the generated query
+    if not any(term in query.lower() for term in ["ai", "artificial intelligence", "machine learning", "robo-advisor"]):
+         query = f"{query} AI"
+
     url = "https://www.googleapis.com/customsearch/v1"
     params = {
         "key": google_api_key,
         "cx": cx,
-        "q": query,
-        "num": count  # up to 10 results per query
+        "q": query, # Use the simpler query
+        "num": count
     }
 
     response = requests.get(url, params=params)
@@ -76,18 +79,69 @@ def get_google_search_results(query, google_api_key, cx, count=5):
     # Debug: print the full JSON response (optional)
     print("Full Google API Response:", results)
 
-    # Light filtering: remove results that are clearly not official tool pages.
+    # Filtering logic remains largely the same to catch unwanted results
     if "items" in results:
         filtered_items = []
         for item in results["items"]:
             link = item.get("link", "").lower()
-            # Filter out common video sites
-            if "youtube.com" in link or "youtu.be" in link:
+            title = item.get("title", "").lower()
+            snippet = item.get("snippet", "").lower()
+            content = title + " " + snippet
+
+            # Skip obvious non-product sites by URL
+            if any(site in link for site in ["youtube.com", "youtu.be", "wikipedia.org", ".gov", ".edu"]):
                 continue
-            # Filter out blog posts (assuming product pages rarely include '/blog/' in the URL)
-            if "/blog/" in link:
+
+            # Skip obvious article pages, listicles, and educational content by title
+            if any(term in title for term in ["top 10", "best ai", "best tools", "how to", "what is", "guide to", "introduction", "review of", " vs ", " comparison", " trends", " future of", " list of", " examples of"]):
                 continue
+
+            # Skip academic papers
+            if any(file_type in link for file_type in ["/paper/", "/publication/"]):
+                 continue
+
+            # Check for blog/news indicators
+            blog_indicators = ["/blog/", "/article/", "/news/", "/post/", "forbes.com", "medium.com", "investopedia.com", "techcrunch.com", "venturebeat.com", "businessinsider.com", "barrons.com", "finextra.com", "dakota.com", "bdb-bh.com"]
+            is_blog_or_news = any(indicator in link for indicator in blog_indicators)
+
+            # Define product/advisor terms
+            product_indicators = ["tool", "platform", "app", "software", "solution", "product", "service", "suite", "advisor", "robo-advisor"]
+            ai_terms = ["ai", "artificial intelligence", "machine learning", "ml"]
+            advisory_terms = ["advice", "advisor", "planning", "guidance", "recommendation", "robo-advisor", "financial plan"]
+
+            # Check if the content mentions a relevant product type
+            mentions_product_type = any(indicator in content for indicator in product_indicators)
+            mentions_ai = any(term in content for term in ai_terms)
+            mentions_advisory = any(term in content for term in advisory_terms)
+
+            # If it's a blog/news article, only keep it if it clearly mentions a relevant product type
+            # Allow if title mentions product/advisory terms even if URL is newsy
+            if is_blog_or_news and not (mentions_product_type or mentions_advisory):
+                continue
+
+            # Require product-specific terms OR advisory terms
+            if not (mentions_product_type or mentions_advisory):
+                continue
+
+            # Must mention AI capabilities if not explicitly an advisor/robo-advisor
+            if not mentions_advisory and not mentions_ai:
+                 continue
+
+            # If advice was requested, apply stricter checks
+            # Check original_query passed to this function if available, otherwise check the generated query 'q'
+            # For simplicity, let's assume 'query' reflects the intent reasonably well here
+            original_query_needs_advice = any(advice_term in query.lower() for advice_term in ["advice", "planning", "guidance", "recommendation"])
+            if original_query_needs_advice:
+                non_advisory_terms = ["tracker", "tracking", "screener", "portfolio management", "analytics"]
+                has_only_non_advisory = not mentions_advisory and any(term in content for term in non_advisory_terms)
+
+                # Skip if it only mentions non-advisory terms when advice is needed
+                if has_only_non_advisory:
+                    continue
+
+            # Keep the result if it passes all filters
             filtered_items.append(item)
+
         results["items"] = filtered_items
 
     return results
@@ -95,8 +149,7 @@ def get_google_search_results(query, google_api_key, cx, count=5):
 def summarize_results_with_chatgpt(search_results, original_query, openai_api_key):
     """
     Uses the gpt-4o-mini model to summarize the search results.
-    This version instructs the model to only list actual AI tools (official product pages or company websites)
-    that provide solutions for the user's query, excluding blog posts, reviews, and comparisons.
+    This version strictly focuses on direct AI products providing the specific function requested (e.g., advice).
     """
     if not openai_api_key:
         print("Error: No OpenAI API key provided.")
@@ -120,18 +173,28 @@ def summarize_results_with_chatgpt(search_results, original_query, openai_api_ke
         f"The original request is: '{original_query}'.\n\n"
         "Below are Google search results related to the request:\n\n"
         f"{search_context}\n\n"
-        f"Based on the above search results, please provide an objective summary listing only the actual AI tools or products that can help with '{original_query}'. "
-        "Only include official product pages or company websites that directly offer an AI solution, and do not include blog posts, review articles, or comparison pages. "
-        "For each tool, list its name, a brief description, and the URL. If no official tool is found, state that explicitly. "
-        "Format the output so that 'Description' and 'URL' are not treated as list items."
+        f"Based ONLY on the provided search results, identify and list specific AI tools or products that directly provide the functionality for '{original_query}'. "
+        f"CRITICAL: If '{original_query}' involves 'advice', 'planning', or 'guidance', ONLY list tools that explicitly offer these advisory functions (like robo-advisors or AI financial planners). Do NOT list tools that only track, analyze, or manage portfolios unless they also provide personalized advice/recommendations. "
+        "News articles mentioning specific tools (e.g., acquisitions of robo-advisors like WealthNavi, Nutmeg, NextCapital) ARE valid evidence if the tool itself fits the request. Extract the tool name and URL if possible, even from news. "
+        "Exclude general articles, lists, educational content, and general websites. Focus solely on named AI products the user can access. "
+        "For each AI tool found, present it as follows using Markdown (use exactly this format, including the bullet point, bold labels, and <br> tags for line breaks):\n"
+        "*   **Name:** [Tool Name]<br>\n"
+        "    **Description:** [Brief description focusing on how it fulfills the '{original_query}' request (especially advisory features if relevant)]<br>\n"
+        "    **URL:** [Direct URL or 'URL not directly available']\n\n"
+        "List each tool as a separate bullet point. Ensure the Name, Description, and URL for a single tool are grouped under one bullet point, separated by <br> tags."
+        "If no tools matching the specific request (especially the advisory function, if applicable) are found in the results, state 'No specific AI tools found for {original_query}' and suggest a more targeted search query."
     )
 
     messages = [
         {
             "role": "system",
             "content": (
-                "You are a helpful assistant summarizing search results and listing only official AI tool solutions. "
-                "Do not include aggregated blog posts, reviews, or comparisons."
+                "You are a highly discerning AI product finder. Your sole task is to identify specific, named AI tools/products from the provided search results that DIRECTLY match the user's request. "
+                "If the user asks for 'advice' or 'planning', you MUST verify the tool provides this function (e.g., robo-advisor, AI planner), not just related analysis or tracking. "
+                "Interpret news about specific, named tools (like acquisitions) as valid mentions. "
+                "Be extremely strict: NO general articles, NO listicles, NO educational content, NO general websites. Only list actual, usable AI products with names and URLs. "
+                "Format the output using Markdown bullet points for each tool, with bold labels for Name, Description, and URL within each bullet point, using <br> tags for line breaks as specified in the user prompt. "
+                "If the results don't contain tools matching the specific request (especially advisory functions when requested), state that clearly."
             )
         },
         {
@@ -161,7 +224,7 @@ def main():
 
     # Use the generated keywords to perform the Google search.
     print("\nSearching for available AI solutions using Google Custom Search JSON API...")
-    search_results = get_google_search_results(search_keywords, GOOGLE_API_KEY, CUSTOM_SEARCH_ENGINE_ID, count=5)
+    search_results = get_google_search_results(search_keywords, GOOGLE_API_KEY, CUSTOM_SEARCH_ENGINE_ID, count=10)
     if not search_results:
         return
 
