@@ -77,5 +77,10 @@ def search_ai():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+# Add route to serve images
+@app.route('/Images/<path:filename>')
+def serve_image(filename):
+    return send_from_directory(os.path.join(BASE_DIR, 'Images'), filename)
+
 if __name__ == '__main__':
     app.run(debug=True)
