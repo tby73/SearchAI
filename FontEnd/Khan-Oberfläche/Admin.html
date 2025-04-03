@@ -1017,6 +1017,10 @@
       box-shadow: 0 4px 12px #FFFBEF;
       padding: 30px;
       margin-top: 20px;
+      width: 100%;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .form-group {
@@ -1629,32 +1633,6 @@
       } else {
         alert('Ungültige Anmeldedaten. Bitte versuchen Sie es erneut.');
       }
-      
-      // API-Aufruf als Fallback beibehalten (falls später benötigt)
-      /*
-      try {
-        const response = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          alert('Login erfolgreich!');
-          document.getElementById('adminModal').style.display = 'none';
-          // Hier können weitere Aktionen nach erfolgreichem Login hinzugefügt werden
-        } else {
-          alert('Login fehlgeschlagen: ' + data.message);
-        }
-      } catch (error) {
-        console.error('Login error:', error);
-        alert('Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.');
-      }
-      */
     }
 
     // Logout-Funktion
