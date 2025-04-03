@@ -17,38 +17,14 @@
       const priceAddSelect = document.getElementById("price-add");
       const priceDescContainer = document.getElementById("price-description-container");
 
-      let data = [
-        {
-          name: "ChatGPT",
-          link: "https://openai.com/chatgpt",
-          description: "Ein KI-gestützter Chatbot von OpenAI.",
-          type: "Software",
-          price: "Kostenlos / Abo",
-          // Optional: priceDescription can be left empty if not provided.
-          priceDescription: "",
-          ranking: 5,
-          targetGroup: "Entwickler & Forscher"
-        },
-        {
-          name: "Midjourney",
-          link: "https://www.midjourney.com",
-          description: "Ein KI-Bildgenerator für Kreative.",
-          type: "Kreative KI",
-          price: "Abo",
-          priceDescription: "",
-          ranking: 4,
-          targetGroup: "Kreative & Künstler"
-        }
-      ];
+      let data = [];
 
-      // Show or hide the price description input based on the selected price option.
       priceAddSelect.addEventListener("change", function () {
         const selectedPrice = this.value;
         if (selectedPrice === "Abo" || selectedPrice === "Kostenlos / Abo") {
           priceDescContainer.classList.remove("hidden");
         } else {
           priceDescContainer.classList.add("hidden");
-          // Clear the input when hidden
           document.getElementById("price-description").value = "";
         }
       });
@@ -80,7 +56,7 @@
         `).join("");
       }
 
-      addButton.addEventListener("click", function () {
+      addButton.addEventListener("click", async function () {
         const name = document.getElementById("name").value;
         const link = "https://" + document.getElementById("link").value;
         const description = document.getElementById("description").value;
@@ -91,11 +67,22 @@
         const targetGroup = document.getElementById("targetGroup-add").value;
 
         if (name && link && description && type && price && ranking && targetGroup) {
-          data.push({ name, link, description, type, price, priceDescription, ranking, targetGroup });
+          const newEntry = { name, link, description, type, price, priceDescription, ranking, targetGroup };
+          data.push(newEntry);
           renderData();
           addForm.reset();
-          // Hide the price description field again after reset.
           priceDescContainer.classList.add("hidden");
+
+          // Send to Flask backend
+          const response = await fetch("/add-ai", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newEntry)
+          });
+          const result = await response.json();
+          alert(result.message);
         }
       });
 
@@ -106,7 +93,6 @@
 
       renderData();
 
-      // Star rating functionality remains the same.
       document.querySelectorAll('.star').forEach(star => {
         star.addEventListener('click', function() {
           let value = this.getAttribute('data-value');
@@ -173,7 +159,6 @@
         <option value="Kostenlos / Abo">Kostenlos / Abo</option>
       </select>
 
-      <!-- Price description input, hidden by default -->
       <div id="price-description-container" class="mb-2 hidden">
         <h3 class="text-xl font-semibold mb-2">Preis Beschreibung</h3>
         <input id="price-description" type="text" placeholder="Geben Sie die Preisbeschreibung ein" class="p-2 border rounded w-full mb-2" />
@@ -181,11 +166,11 @@
 
       <h3 class="text-xl font-semibold mb-2">Rating</h3>
       <div id="rating-add" class="flex space-x-1 mb-2">
-        <span class="star text-gray-400 cursor-pointer" data-value="1">&#9733;</span>
-        <span class="star text-gray-400 cursor-pointer" data-value="2">&#9733;</span>
-        <span class="star text-gray-400 cursor-pointer" data-value="3">&#9733;</span>
-        <span class="star text-gray-400 cursor-pointer" data-value="4">&#9733;</span>
-        <span class="star text-gray-400 cursor-pointer" data-value="5">&#9733;</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="1">★</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="2">★</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="3">★</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="4">★</span>
+        <span class="star text-gray-400 cursor-pointer" data-value="5">★</span>
         <input id="ranking-add" type="hidden" value="0" />
       </div>
 
