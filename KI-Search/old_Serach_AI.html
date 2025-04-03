@@ -1118,32 +1118,19 @@
         
         const topic = document.getElementById('newsTopicInput').value.trim();
         
-        // *** Changed endpoint to /api/search-ai ***
-        // Send topic as the 'query' to the search endpoint
-        const response = await fetch('/api/search-ai', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query: topic }), // Use topic as query
-        });
-
+        const response = await fetch('/api/generate-news' + (topic ? `?topic=${encodeURIComponent(topic)}` : ''));
         const data = await response.json();
         
         if (data.success) {
-           // Display results from search-ai endpoint
-          newsContainer.innerHTML = data.results; 
-          // Clear the input after successful generation (optional)
-          document.getElementById('newsTopicInput').value = ''; 
+          newsContainer.innerHTML = data.content;
+          document.getElementById('newsTopicInput').value = '';
         } else {
-          // Display error message from search-ai endpoint
-          newsContainer.innerHTML = `<p>Failed to load news: ${data.message}. Please try again later.</p>`; 
+          newsContainer.innerHTML = '<p>Failed to load news. Please try again later.</p>';
         }
       } catch (error) {
         console.error('Error loading news:', error);
         const newsContainer = document.getElementById('title').querySelector('.text-container');
-        // Provide more specific error feedback
-        newsContainer.innerHTML = `<p>Error loading news. Please check the console or try again later. Error: ${error.message}</p>`; 
+        newsContainer.innerHTML = '<p>Error loading news. Please try again later.</p>';
       }
     }
 
