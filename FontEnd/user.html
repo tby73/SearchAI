@@ -13,58 +13,46 @@
       const targetGroupFilter = document.getElementById("targetGroup");
       const cardContainer = document.getElementById("card-container");
 
-      let data = [
-        {
-          name: "ChatGPT",
-          link: "https://openai.com/chatgpt",
-          description: "Ein KI-gestützter Chatbot von OpenAI.",
-          type: "Software",
-          price: "Kostenlos / Abo",
-          ranking: 5,
-          targetGroup: "Entwickler & Forscher"
-        },
-        {
-          name: "Midjourney",
-          link: "https://www.midjourney.com",
-          description: "Ein KI-Bildgenerator für Kreative.",
-          type: "Kreative KI",
-          price: "Abo",
-          ranking: 4,
-          targetGroup: "Kreative & Künstler"
-        }
-      ];
+      async function fetchData() {
+        const name = searchInput.value.trim();
+        const price = priceFilter.value;
+        const ranking = rankingFilter.value;
+        const targetGroup = targetGroupFilter.value;
 
-      function renderData() {
-        const searchValue = searchInput.value.toLowerCase();
-        const priceValue = priceFilter.value;
-        const rankingValue = rankingFilter.value;
-        const targetGroupValue = targetGroupFilter.value;
+        const response = await fetch("/get-ais", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: name,
+            price: price,
+            ranking: ranking,
+            targetGroup: targetGroup
+          })
+        });
 
-        const filteredData = data.filter(item =>
-          (item.name.toLowerCase().includes(searchValue) || item.description.toLowerCase().includes(searchValue)) &&
-          (priceValue ? item.price === priceValue : true) &&
-          (rankingValue ? item.ranking.toString() === rankingValue : true) &&
-          (targetGroupValue ? item.targetGroup === targetGroupValue : true)
-        );
+        const data = await response.json();
+        renderData(data);
+      }
 
-        cardContainer.innerHTML = filteredData.map(item => `
+      function renderData(data) {
+        cardContainer.innerHTML = data.map(item => `
           <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-xl font-semibold">${item.name}</h2>
-            <p class="text-gray-600">${item.description}</p>
             <a href="${item.link}" target="_blank" class="text-blue-500 underline">Mehr erfahren</a>
-            <p class="mt-2"><strong>Typ:</strong> ${item.type}</p>
             <p><strong>Preis:</strong> ${item.price}</p>
-            <p><strong>Ranking:</strong> ${'⭐'.repeat(item.ranking)}</p>
-            <p><strong>Zielgruppe:</strong> ${item.targetGroup}</p>
+            <p><strong>Ranking:</strong> ${'⭐'.repeat(item.rating)}</p>
           </div>
         `).join("");
       }
 
-      searchInput.addEventListener("input", renderData);
-      priceFilter.addEventListener("change", renderData);
-      rankingFilter.addEventListener("change", renderData);
-      targetGroupFilter.addEventListener("change", renderData);
-      renderData();
+      searchInput.addEventListener("input", fetchData);
+      priceFilter.addEventListener("change", fetchData);
+      rankingFilter.addEventListener("change", fetchData);
+      targetGroupFilter.addEventListener("change", fetchData);
+
+      fetchData(); // Initial fetch
     });
   </script>
 </head>
