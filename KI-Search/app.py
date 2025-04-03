@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 import os
 import KI_searches_KIs as ki  # Import your script (rename the file to use underscores)
 import markdown  # Add this import for Markdown to HTML conversion
+import re
 
 app = Flask(__name__)
 # Get the directory where app.py is located
@@ -44,7 +45,7 @@ def search_ai():
             search_keywords,
             ki.GOOGLE_API_KEY,
             ki.CUSTOM_SEARCH_ENGINE_ID,
-            count=5
+            count=10
         )
 
         if not search_results:
@@ -57,8 +58,18 @@ def search_ai():
             ki.OPENAI_API_KEY
         )
 
-        # Format the summary as HTML, properly converting Markdown
+        # Convert markdown to HTML
         html_content = markdown.markdown(summary)
+        
+        # Make URLs clickable by replacing them with anchor tags
+        # First handle "URL: https://..." format
+        url_pattern = r'(URL: )(https?://[^\s<]+)'
+        html_content = re.sub(url_pattern, r'\1<a href="\2" target="_blank">\2</a>', html_content)
+        
+        # Then handle any remaining URLs in the text
+        url_pattern_general = r'(?<![">])(https?://[^\s<]+)(?![^<]*>)'
+        html_content = re.sub(url_pattern_general, r'<a href="\1" target="_blank">\1</a>', html_content)
+        
         formatted_results = f"<h3>AI Solutions for: {query}</h3><div>{html_content}</div>"
 
         return jsonify({'success': True, 'results': formatted_results})
