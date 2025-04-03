@@ -900,6 +900,108 @@
     [data-theme="dark"] .main-content {
       background-color: transparent; /* Transparenter Hintergrund */
     }
+
+    /* Admin Button Styling */
+    .admin-login-wrapper {
+      position: fixed;
+      top: 20px;
+      right: 90px; /* Platziert den Button neben dem Theme Switch */
+      z-index: 1002;
+    }
+
+    .admin-btn {
+      background-color: #86B1EE;
+      color: #333;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 17px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .admin-btn:hover {
+      background-color: #6491CE;
+    }
+
+    /* Admin Modal Styling */
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1003;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .admin-modal-content {
+      background-color: #FFFBEF;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+    }
+
+    .admin-modal-content h2 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    .admin-modal-content input {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+      border: 1px solid #86B1EE;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .admin-modal-content button {
+      width: 100%;
+      height: 40px;
+      background-color: #86B1EE;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .admin-modal-content button:hover {
+      background-color: #6491CE;
+    }
+
+    /* Dark mode support */
+    [data-theme="dark"] .admin-modal-content {
+      background-color: #4b4b4b;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .admin-modal-content h2 {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .admin-modal-content input {
+      background-color: #5d5d5d;
+      color: #ffffff;
+      border-color: #86B1EE;
+    }
+
+    [data-theme="dark"] .admin-btn {
+      background-color: #4C9CE3;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .admin-btn:hover {
+      background-color: #3A7AB3;
+    }
   </style>
 </head>
 <body>
@@ -921,6 +1023,21 @@
         <i class="fas fa-moon"></i>
       </div>
     </label>
+  </div>
+
+  <!-- Admin Login Button -->
+  <div class="admin-login-wrapper">
+    <button class="admin-btn" onclick="showAdminLogin()">Admin</button>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <h2>Admin Login</h2>
+      <input type="text" id="adminUsername" placeholder="Username">
+      <input type="password" id="adminPassword" placeholder="Password">
+      <button onclick="adminLogin()">Login</button>
+    </div>
   </div>
 
   <!-- Navigation bar -->
@@ -1240,6 +1357,48 @@
 
     // Add event listener for the search button
     document.getElementById('searchBtn').addEventListener('click', searchAI);
+
+    // Admin functionality
+    function showAdminLogin() {
+      const modal = document.getElementById('adminModal');
+      modal.style.display = 'flex';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('adminModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    async function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('Login successful!');
+          document.getElementById('adminModal').style.display = 'none';
+          // Hier können weitere Aktionen nach erfolgreichem Login hinzugefügt werden
+        } else {
+          alert('Login failed: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        alert('An error occurred during login. Please try again.');
+      }
+    }
 
   </script>
 </body>
