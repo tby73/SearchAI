@@ -1376,6 +1376,16 @@
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
 
+      // Direkter Vergleich mit den Anmeldedaten (in Produktionsumgebungen sollte dies serverseitig erfolgen)
+      if (username === "ADMIN" && password === "Test") {
+        // Erfolgreich angemeldet, zur Admin.html weiterleiten
+        window.location.href = "Admin.html";
+      } else {
+        alert('Ungültige Anmeldedaten. Bitte versuchen Sie es erneut.');
+      }
+      
+      // API-Aufruf als Fallback beibehalten (falls später benötigt)
+      /*
       try {
         const response = await fetch('/api/admin/login', {
           method: 'POST',
@@ -1388,16 +1398,17 @@
         const data = await response.json();
 
         if (data.success) {
-          alert('Login successful!');
+          alert('Login erfolgreich!');
           document.getElementById('adminModal').style.display = 'none';
           // Hier können weitere Aktionen nach erfolgreichem Login hinzugefügt werden
         } else {
-          alert('Login failed: ' + data.message);
+          alert('Login fehlgeschlagen: ' + data.message);
         }
       } catch (error) {
         console.error('Login error:', error);
-        alert('An error occurred during login. Please try again.');
+        alert('Bei der Anmeldung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.');
       }
+      */
     }
 
   </script>
