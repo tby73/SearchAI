@@ -1354,9 +1354,58 @@
         alert('An error occurred while searching. Please try again.'); 
       }
     }
-
+    
     // Add event listener for the search button
     document.getElementById('searchBtn').addEventListener('click', searchAI);
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.getElementById("aiSearch");
+      const priceFilter = document.getElementById("cost");
+      const rankingFilter = document.getElementById("rating");
+      const targetGroupFilter = document.getElementById("targetGroup");
+
+      async function fetchData() {
+        const name = searchInput.value.trim();
+        const price = priceFilter.value;
+        const ranking = rankingFilter.value;
+        const targetGroup = targetGroupFilter.value;
+
+        const response = await fetch("/get-ais", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: name,
+            price: price,
+            ranking: ranking,
+            targetGroup: targetGroup
+          })
+        });
+
+        const data = await response.json();
+        renderData(data);
+      }
+
+      function renderData(data) {
+        cardContainer.innerHTML = data.map(item => `
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">${item.name}</h2>
+            <a href="${item.link}" target="_blank" class="text-blue-500 underline">Mehr erfahren</a>
+            <p><strong>Preis:</strong> ${item.price}</p>
+            <p><strong>Ranking:</strong> ${'⭐'.repeat(item.rating)}</p>
+          </div>
+        `).join("");
+      }
+
+      searchInput.addEventListener("input", fetchData);
+      priceFilter.addEventListener("change", fetchData);
+      rankingFilter.addEventListener("change", fetchData);
+      targetGroupFilter.addEventListener("change", fetchData);
+
+      fetchData(); // Initial fetch
+    }); 
+
 
     // Admin functionality
     function showAdminLogin() {

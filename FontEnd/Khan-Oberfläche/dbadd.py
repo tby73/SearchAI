@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect
 import mysql.connector
 from flask_cors import CORS
 
-app = Flask(__name__, template_folder="template")
+app = Flask(__name__)
 CORS(app)
 
 def get_db_connection():
@@ -17,11 +17,7 @@ def get_db_connection():
 
 @app.route("/")
 def admin():
-    return render_template("admin.html")
-
-@app.route("/user")
-def user():
-    return render_template("user.html")
+    return render_template("User.html")
 
 # ========== ADD AI ==========
 

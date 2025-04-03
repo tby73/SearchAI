@@ -1340,7 +1340,7 @@
             <input type="text" id="keywords" class="form-control" placeholder="z.B. Bildgenerierung, Text, KI">
           </div>
           
-          <button type="submit" class="admin-submit-btn">AI-Modell speichern</button>
+          <button type="submit" class="add-btn">AI-Modell speichern</button>
         </form>
       </div>
       
@@ -1456,6 +1456,22 @@
 
     // Show home section by default
     window.addEventListener('load', () => showSection('home'));
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const addButton = document.getElementById("add-btn");
+      addButton.addEventListener("click", async function () {
+        // Send to Flask backend
+        const response = await fetch("/add-ai", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newEntry)
+              });
+        const result = await response.json();
+        alert(result.message);
+      }); 
+    }); 
 
     // Add news generation functionality
     async function loadAIGeneratedNews() {
