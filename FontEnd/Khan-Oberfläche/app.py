@@ -18,8 +18,8 @@ def home():
     print(f"HTML files found: {html_files}")
 
     # If Search_AI.html exists, serve it
-    if 'Search_AI.html' in html_files:
-        return send_from_directory(BASE_DIR, 'Search_AI.html')
+    if 'User.html' in html_files:
+        return send_from_directory(BASE_DIR, 'User.html')
     # If index.html exists, serve it
     elif 'index.html' in html_files:
         return send_from_directory(BASE_DIR, 'index.html')
@@ -67,4 +67,4 @@ def search_ai():
         return jsonify({'success': False, 'message': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5500)
