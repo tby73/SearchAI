@@ -761,9 +761,7 @@
     .filter-option {
       width: 100%;
       padding: 15px;
-      background-color: #f8f9fa;
       border-radius: 8px;
-      box-shadow: 0 2px 4px #FFFBEF;
     }
 
     /* Loading container */
@@ -827,14 +825,14 @@
       justify-content: center;
     }
 
-    /* White Background Container */
+    /* White Background Container - Adjusted for Admin Style */
     .search-ai__content-box {
       width: 100%;
       max-width: 1200px;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.9); /* Match Admin light */
       border-radius: 10px;
-      box-shadow: 0 4px 12px #FFFBEF;
+      box-shadow: 0 4px 12px #FFFBEF; /* Match Admin light */
       box-sizing: border-box;
     }
 
@@ -851,30 +849,38 @@
     .search-ai__filter-item {
       width: 100%;
       padding: 15px;
-      background-color: #f8f9fa;
       border-radius: 8px;
-      box-shadow: 0 2px 4px #FFFBEF;
+    }
+
+    /* Style search inputs like admin inputs */
+    #create-pc .search-ai__filter-item input[type="text"],
+    #create-pc .search-ai__filter-item select {
+      border: 1px solid #ccc;
+      color: #333;
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    /* Add margin below labels in search filters */
+    #create-pc .search-ai__filter-item label {
+      display: block;
+      margin-bottom: 20px;
     }
 
     /* Dark Mode Adjustments */
-    [data-theme="dark"] .site-logo {
-      background-color: rgba(40, 40, 40, 0.9) ;
-    }
-
-    [data-theme="dark"] .site-logo__image--light {
-      display: none;
-    }
-
-    [data-theme="dark"] .site-logo__image--dark {
-      display: block;
-    }
-
-    [data-theme="dark"] .search-ai__content-box {
-      background-color: #4b4b4b;
-    }
-
     [data-theme="dark"] .search-ai__filter-item {
       background-color: #5d5d5d;
+    }
+
+    /* Dark mode for search inputs */
+    [data-theme="dark"] #create-pc .search-ai__filter-item input[type="text"],
+    [data-theme="dark"] #create-pc .search-ai__filter-item select {
+      background-color: #5d5d5d;
+      color: #ffffff;
+      border-color: #777;
     }
 
     /* Responsive Design */
@@ -1058,19 +1064,25 @@
       resize: vertical;
     }
 
-    .admin-submit-btn {
-      background-color: #41E3FF;
-      padding: 12px 30px;
-      color: #333;
+    /* Style admin submit button like cta-btn */
+    .admin-submit-btn, .add-btn { /* Target both possible classes */
+      background-color: #41E3FF; /* Match cta-btn */
+      padding: 15px 40px; /* Match cta-btn */
+      color: #333; /* Match cta-btn */
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
+      border-radius: 5px; /* Match cta-btn */
+      font-size: 18px; /* Match cta-btn */
+      text-decoration: none;
       transition: background-color 0.3s ease;
+      display: block;
+      margin: 20px auto 0; /* Center button */
+      text-align: center;
+      cursor: pointer;
+      width: fit-content;
     }
 
-    .admin-submit-btn:hover {
-      background-color: #2F9ACF;
+    .admin-submit-btn:hover, .add-btn:hover {
+      background-color: #2F9ACF; /* Match cta-btn hover */
     }
 
     /* Admin-spezifische Tabellenstile */
@@ -1128,23 +1140,109 @@
       color: #fff;
     }
 
+    /* Ensure admin form controls have specific background in dark mode */
+    [data-theme="dark"] .admin-form .form-control {
+      background-color: #5d5d5d; /* Explicit light gray for admin dark mode inputs */
+      color: #ffffff; /* Ensure text is white */
+      border-color: #777; /* Match border color */
+    }
+
+    /* Ensure all form controls in admin dark mode have the same background */
     [data-theme="dark"] .form-control {
       background-color: #5d5d5d;
-      color: #fff;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] #admin h1,
+    [data-theme="dark"] #admin h2 {
+      color: #ffffff; /* Make admin headings white in dark mode */
+    }
+
+    .section#admin h1,
+    .section#admin h2 {
+      font-weight: normal; /* Remove bold styling with higher specificity */
+    }
+
+    .admin-form .form-group label {
+      font-weight: normal; /* Ensure admin form labels are not bold */
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    [data-theme="dark"] .search-ai__content-box {
+      background-color: #4b4b4b; /* Match Admin dark background */
+    }
+
+    [data-theme="dark"] .search-ai__filter-item {
+      /* background-color: transparent; */ /* Remove transparency */
+      background-color: #5d5d5d; /* Match Admin dark form-group background */
+      /* box-shadow: ...; */ /* Ensure no unwanted shadow */
+    }
+
+    [data-theme="dark"] #create-pc .search-ai__filter-item label {
+      color: #ffffff; /* Match Admin dark label color */
+    }
+
+    /* Dark mode for search inputs - Match Admin lighter inputs */
+    [data-theme="dark"] #create-pc .search-ai__filter-item input[type="text"],
+    [data-theme="dark"] #create-pc .search-ai__filter-item select {
+      background-color: #5d5d5d; /* Match Admin dark form-control background */
+      color: #ffffff;
       border-color: #777;
     }
 
-    [data-theme="dark"] .ai-table {
-      background-color: #4b4b4b;
-      color: #fff;
+    /* Light Mode Styles to Match Admin */
+    .search-ai__content-box {
+        /* Assuming default light is rgba(255, 255, 255, 0.9) like admin */
+        background-color: rgba(255, 255, 255, 0.9);
+        /* box-shadow: 0 4px 12px #FFFBEF; */ /* Match admin light shadow */
+        /* Keep padding, radius, etc. */
     }
 
-    [data-theme="dark"] .ai-table th {
-      background-color: #2c2c2c;
-      color: #fff;
+    .search-ai__filter-item {
+        /* background-color: transparent; */ /* Remove transparency */
+        background-color: #f8f9fa; /* Match Admin light form-group background */
+        /* box-shadow: 0 2px 4px rgba(0,0,0,0.05); */ /* Match admin light shadow */
+        /* Keep padding, radius etc. */
     }
 
-    [data-theme="dark"] .ai-table tr:hover {
+    #create-pc .search-ai__filter-item input[type="text"],
+    #create-pc .search-ai__filter-item select {
+        border: 1px solid #ccc;
+        color: #333;
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    #create-pc .search-ai__filter-item label {
+        color: #333; /* Ensure default dark text for labels in light mode */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .taskbar,
+      .search-ai__container,
+      .search-ai__content-box {
+        width: 95%;
+      }
+    }
+
+    [data-theme="dark"] .ai-table td { /* Style table data cells in dark mode */
+      background-color: #4b4b4b; /* Match table background */
+      color: #ffffff; /* Make text white */
+      border-bottom-color: #5d5d5d; /* Adjust border color */
+    }
+
+    [data-theme="dark"] .ai-table tr:hover td { /* Ensure hover overrides */
       background-color: #5d5d5d;
     }
   </style>
