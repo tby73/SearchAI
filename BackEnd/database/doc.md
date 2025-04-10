@@ -92,30 +92,6 @@ INSERT INTO ai (name, link, price, rating) VALUES ('ChatGPT', 'https://chatgpt.c
 ```
 
 
-
-
-%%
-
----
-
-Excel to SQL
-
-https://thdoan.github.io/mr-data-converter/
-
-**Code zum Inserts generieren**
-https://www.online-python.com/
-```py
-statements = []
-
-for i in range(16, 20):
-    statements.append(f"INSERT INTO ai_has_type(ai_id, type_id) VALUES({i}, 2);")
-
-for i in range(len(statements)):    
-    print(statements[i])
-```
-
-%%
-
 # Tabellen befüllen
 ## Type
 #### 1 - NLP
