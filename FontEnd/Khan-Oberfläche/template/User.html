@@ -1332,7 +1332,7 @@
         };
         
         // Make API call to backend
-        fetch('/get-ais', {
+        fetch('/Backend/db_connection.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1349,52 +1349,59 @@
             displaySearchResults(data.ais);
             document.getElementById('search-results').classList.remove('hidden');
           } else {
-            alert('Error: ' + data.message);
+            alert('Fehler: ' + data.message);
           }
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Fehler:', error);
           document.getElementById('loading-screen').classList.add('hidden');
-          alert('An error occurred while searching. Please try again.');
+          alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
         });
       } catch (error) {
-        console.error('Error searching AI:', error);
+        console.error('Fehler bei der KI-Suche:', error);
         document.getElementById('loading-screen').classList.add('hidden');
-        alert('An error occurred while searching. Please try again.');
+        alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
       }
     }
     
+    // Function to display search results
     function displaySearchResults(ais) {
-      const resultsContainer = document.getElementById('search-results-content');
+      const resultsContainer = document.getElementById('search-results');
+      resultsContainer.innerHTML = ''; // Clear previous results
       
-      if (!ais || ais.length === 0) {
-        resultsContainer.innerHTML = '<h3>No results found</h3><p>Please try different search criteria.</p>';
+      if (ais.length === 0) {
+        resultsContainer.innerHTML = '<p class="text-center text-gray-500">Keine Ergebnisse gefunden.</p>';
         return;
       }
       
-      // Generate HTML for cards
-      let html = '<div class="row">';
+      const resultsGrid = document.createElement('div');
+      resultsGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
       
       ais.forEach(ai => {
-        html += `
-        <div class="col-md-4">
-          <div class="card ai-card">
-            <div class="card-body">
-              <h5 class="card-title">${ai.name}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">${ai.type || 'N/A'}</h6>
-              <p class="card-text">${ai.description || 'No description available'}</p>
-              <p><strong>Price:</strong> ${ai.price || 'N/A'}</p>
-              <p><strong>Rating:</strong> ${'★'.repeat(ai.rating)}</p>
-              <p><strong>Target Group:</strong> ${ai.target_group || 'N/A'}</p>
-              <a href="${ai.link}" class="btn btn-primary" target="_blank">Visit Website</a>
-            </div>
+        const aiCard = document.createElement('div');
+        aiCard.className = 'bg-white rounded-lg shadow-md p-4';
+        
+        aiCard.innerHTML = `
+          <h3 class="text-lg font-semibold mb-2">${ai.name}</h3>
+          <p class="text-gray-600 mb-2">${ai.description}</p>
+          <div class="flex items-center mb-2">
+            <span class="text-yellow-400">★</span>
+            <span class="ml-1">${ai.rating}/5</span>
           </div>
-        </div>
+          <div class="flex items-center mb-2">
+            <span class="text-gray-600">Preismodell:</span>
+            <span class="ml-2">${ai.cost_model}</span>
+          </div>
+          <div class="flex items-center">
+            <span class="text-gray-600">Zielgruppe:</span>
+            <span class="ml-2">${ai.target_group}</span>
+          </div>
         `;
+        
+        resultsGrid.appendChild(aiCard);
       });
       
-      html += '</div>';
-      resultsContainer.innerHTML = html;
+      resultsContainer.appendChild(resultsGrid);
     }
 
     // Add event listener for the search button
