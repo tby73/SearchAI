@@ -1465,13 +1465,13 @@
       const addButton = document.getElementById("add-btn");
       addButton.addEventListener("click", async function () {
         // Send to Flask backend
-        const response = await fetch("/add-ai", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(newEntry)
-              });
+        const response = await fetch('/add-ai', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newEntry)
+        });
         const result = await response.json();
         alert(result.message);
       }); 

@@ -1,31 +1,87 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 import os
+import mysql.connector
+from flask_cors import CORS
 import KI_searches_KIs as ki  # Import your script (rename the file to use underscores)
 import markdown  # Add this import for Markdown to HTML conversion
 
-app = Flask(__name__)
-# Get the directory where app.py is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder="template")
+CORS(app)
 
+# Database configuration
+def get_db_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        user="flaskuser",
+        password="flaskpass",
+        database="searchai_maindb"
+    )
+
+# ========== HTML ROUTES ==========
 @app.route('/')
 def home():
-    # List all files in the current directory to help debug
-    files = os.listdir(BASE_DIR)
-    print(f"Files in directory: {files}")
+    return render_template('User.html')
 
-    # Look for HTML files
-    html_files = [f for f in files if f.endswith('.html')]
-    print(f"HTML files found: {html_files}")
+@app.route('/admin')
+def admin():
+    return render_template('Admin.html')
 
-    # If Search_AI.html exists, serve it
-    if 'User.html' in html_files:
-        return send_from_directory(BASE_DIR, 'User.html')
-    # If index.html exists, serve it
-    elif 'index.html' in html_files:
-        return send_from_directory(BASE_DIR, 'index.html')
-    # If no suitable HTML file is found
-    else:
-        return "No HTML file found. Please make sure Search_AI.html or index.html is in the same directory as app.py."
+# ========== API ROUTES ==========
+@app.route('/api/add-ai', methods=['POST'])
+def add_ai():
+    try:
+        data = request.json
+        name = data.get('name')
+        description = data.get('description')
+        category = data.get('category')
+        url = data.get('url')
+
+        if not all([name, description, category, url]):
+            return jsonify({'success': False, 'message': 'Missing required fields'})
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = """
+            INSERT INTO ai_models (name, description, category, url)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(query, (name, description, category, url))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'success': True, 'message': 'AI added successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@app.route('/api/get-ais', methods=['GET'])
+def get_ais():
+    try:
+        search_query = request.args.get('query', '')
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        if search_query:
+            search_query = f"%{search_query}%"
+            query = """
+                SELECT * FROM ai_models 
+                WHERE name LIKE %s 
+                OR description LIKE %s 
+                OR category LIKE %s
+            """
+            cursor.execute(query, (search_query, search_query, search_query))
+        else:
+            cursor.execute("SELECT * FROM ai_models")
+        
+        ais = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify({'success': True, 'ais': ais})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
 
 @app.route('/api/search-ai', methods=['POST'])
 def search_ai():
